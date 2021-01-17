@@ -1,7 +1,7 @@
 <template>
   <!-- <h3>in task viewer</h3> -->
   <div class="w-full mx-auto">
-    <div class="flex justify-start items-center w-full grid grid-cols-6 gap-4">
+    <div class="break-words flex justify-start items-center w-full grid grid-cols-6 gap-4">
       <!-- TODO: add idx -->
       <div class="text-forbase font-black text-left">{{ tid + 1 }}.</div>
       <div class="text-forbase font-medium text-left">

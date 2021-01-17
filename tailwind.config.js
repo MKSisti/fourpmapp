@@ -17,7 +17,11 @@ module.exports = {
         'fordarker':'#9CA8AC',
         'prgrs':'#F6F6F6',
         'baseHover':'#57A9E9',
-        'lightHover': '#66C7F6'
+        'lightHover': '#66C7F6',
+        'burntSienna':'#EE9781',
+        'Onyx':'#3d3d3d',
+        'sinopia':'#CB410B',
+        'kobe':'#742506'
       },
       boxShadow: {
        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.45)',

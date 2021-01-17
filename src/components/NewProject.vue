@@ -1,8 +1,29 @@
 <template>
   <div class="overflow-hidden">
+    <transition appear name="fade-in">
+      <div
+        v-if="errors.length"
+        class="flex flex-col mx-12 bg-burntSienna p-8 rounded mb-4"
+      >
+        <span
+          class="text-kobe font-medium"
+          v-for="(error, idx) in errors"
+          :key="idx"
+          ><box-icon
+            size="cssSize"
+            class="fill-current h-3 w-3"
+            type="solid"
+            name="circle"
+          ></box-icon>
+          {{ error }}
+        </span>
+      </div>
+    </transition>
     <div class="flex justify-center space-x-6 mb-8 mx-12 lg:space-x-12">
       <div class="w-1/2">
-        <label class="text-lightL mb-1 block uppercase font-bold text-2xl" for="name"
+        <label
+          class="text-lightL mb-1 block uppercase font-bold text-2xl"
+          for="project-name"
           >Name</label
         >
         <input
@@ -10,28 +31,36 @@
           class="rounded-md w-full py-4 px-4 bg-darkest focus:bg-darkL font-semibold text-xl text-lightL focus:outline-none border-2 border-lightC focus:border-lightM"
           type="text"
           id="project-name"
-          name="name"
+          name="project-name"
           placeholder="project name"
           autocomplete="off"
+          minlength="3"
+          maxlength="32"
+          required
         />
       </div>
       <div class="w-1/2">
-        <label class="text-lightL mb-1 block uppercase font-bold text-2xl" for="desc"
+        <label
+          class="text-lightL mb-1 block uppercase font-bold text-2xl"
+          for="project-desc"
           >Description</label
         >
         <input
           v-model="desc"
-          class="rounded-md w-full py-4 px-4 bg-darkest focus:bg-darkL text-lightL font-semibold text-xl  focus:outline-none border-2 border-lightC focus:border-lightM "
+          class="rounded-md w-full py-4 px-4 bg-darkest focus:bg-darkL text-lightL font-semibold text-xl focus:outline-none border-2 border-lightC focus:border-lightM"
           type="text"
           id="project-desc"
-          name="desc"
+          name="project-desc"
           placeholder="project description"
           autocomplete="off"
+          minlength="3"
+          maxlength="32"
+          required
         />
       </div>
     </div>
 
-    <div class=" shadow-inner bg-baseC rounded-xl p-3">
+    <div class="shadow-inner bg-baseC rounded-xl p-3">
       <h1 class="text-forbase text-xl uppercase font-bold mb-4">
         add tasks to the project
       </h1>
@@ -49,9 +78,8 @@
           :key="idx"
           class="flex flex-row w-full"
         >
-        
           <tasks-viewer
-          @delete-task="deleteTask"
+            @delete-task="deleteTask"
             :tid="idx"
             :tname="task.name"
             :tdesc="task.desc"
@@ -80,7 +108,7 @@
         <div class="">Confirm Project</div>
       </div> -->
       <h1
-        class=" shadow-xl transition duration-150 ease-in-out shadow-lg mx-auto mt-4 bg-baseC text-center text-2xl uppercase cursor-pointer font-black p-5 text-lightM rounded-xl hover:bg-baseHover"
+        class="shadow-xl transition duration-150 ease-in-out shadow-lg mx-auto mt-4 bg-baseC text-center text-2xl uppercase cursor-pointer font-black p-5 text-lightM rounded-xl hover:bg-baseHover"
         @click="confirmProject"
       >
         Confirm Project
@@ -96,39 +124,64 @@ import TasksViewer from "./TasksViewer.vue";
 
 export default {
   name: "project",
-  emits: ["add-project",'project-changed'],
+  emits: ["add-project", "project-changed"],
   components: { NewTask, TasksViewer },
   data() {
     return {
-      name: "",
-      desc: "",
+      name: null,
+      desc: null,
       tasks: [],
-      completion: 'width: 0%'
+      errors: [],
+      completion: "width: 0%",
     };
   },
   methods: {
+    validateData() {
+      this.errors = [];
+      if (this.name && this.desc && this.tasks.length > 0) {
+        // console.log('from val true');
+        return true;
+      }
+
+      if (!this.name) {
+        this.errors.push("Please add a project name");
+      }
+      if (!this.desc) {
+        this.errors.push("Please add a project description");
+      }
+      if (this.tasks.length == 0) {
+        this.errors.push("Please add at least one task");
+      }
+      // console.log('from val false');
+      return false;
+    },
     addTask(T) {
-        const newT = {
-          name: T.name,
-          desc: T.desc,
-          duration: T.duration,
-          finished: false
-        };
+      const newT = {
+        name: T.name,
+        desc: T.desc,
+        duration: T.duration,
+        finished: false,
+      };
 
       this.tasks.push(newT);
     },
     confirmProject() {
-      const newP = {
-        name: this.name,
-        desc: this.desc,
-        tasks: this.tasks,
-        completion: this.completion
-      };
-      this.tasks = [];
-      this.name = "";
-      this.desc = "";
-      this.$emit("add-project", newP);
-      this.$emit('project-changed');
+      if (this.validateData()) {
+        const newP = {
+          name: this.name,
+          desc: this.desc,
+          tasks: this.tasks,
+          completion: this.completion,
+        };
+        this.tasks = [];
+        this.name = "";
+        this.desc = "";
+        this.$emit("add-project", newP);
+        this.$emit("project-changed");
+        console.log("all good");
+      } else {
+        console.log("nope");
+      }
     },
     deleteTask(name) {
       this.tasks = this.tasks.filter((task) => task.name !== name);
@@ -138,4 +191,23 @@ export default {
 </script>
 
 <style>
+.fade-in-enter-from {
+  max-height: 0px;
+  opacity: 0;
+}
+
+.fade-in-leave-to {
+  max-height: 0px;
+  opacity: 0;
+}
+
+.fade-in-enter-to {
+  max-height: 999px;
+  opacity: 1;
+}
+
+.fade-in-leave-from {
+  max-height: 999px;
+  opacity: 1;
+}
 </style>

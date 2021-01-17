@@ -1,7 +1,7 @@
 <template>
   <div class="mb-12">
     <!-- <h2>in project viewer</h2> -->
-    <div class="grid grid-cols-7 items-center mb-3 w-full">
+    <div class="break-words grid grid-cols-7 items-center mb-3 w-full">
       <div class="col-span-1 text-lightL text-xl font-bold uppercase">
         {{ pname }}
       </div>
