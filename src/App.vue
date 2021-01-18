@@ -1,17 +1,19 @@
 <template>
   <section class="w-full space-y-4 py-6 mx-auto lg:w-3/4 select-none">
     <div
-      class="transition duration-300 shadow fixed bg-blue-300 px-6 py-2 -ml-12 rounded opacity-75"
+      class="transition ease duration-300 shadow fixed bg-blue-300 px-3 py-2 rounded opacity-60"
     >
       {{ appState }}
     </div>
     <div class="transition-all shadow-xl bg-darkC rounded-md py-8 px-12">
       <h1
-        class="mb-6 transition duration-150 ease-in-out shadow-lg mx-auto bg-baseC text-center text-2xl uppercase cursor-pointer font-black p-5 max-w-md text-lightM rounded-xl hover:bg-baseHover"
+        
+        class="mb-6 w-1/4 mx-auto transition duration-150 ease shadow-lg bg-baseC text-center text-2xl uppercase cursor-pointer font-black py-5 text-lightM rounded-xl hover:bg-baseHover"
         @click="ShowAddProject"
       >
-        Add new Projects
+        {{ addNewDynamic }}
       </h1>
+
       <transition appear name="fade-in">
         <new-project
           class="transition-all duration-500 ease"
@@ -72,6 +74,12 @@ export default {
   computed: {
     appState() {
       return this.updateTimeout ? "working ..." : "saved";
+    },
+    addNewDynamic() {
+      return this.formVisible ? "HIDE FORM" : "ADD NEW PROJECT";
+    },
+    attemptStyle() {
+      return this.formVisible ? "" : "";
     },
   },
   data() {
@@ -190,16 +198,15 @@ export default {
       var total = 0;
       var ftot = 0;
       for (let idx = 0; idx < T.length; idx++) {
-        total += Number(T[idx].duration)  ;
+        total += Number(T[idx].duration);
         if (T[idx].finished == true) {
-          ftot += Number( T[idx].duration ) ;
+          ftot += Number(T[idx].duration);
         }
       }
       // console.log(total);
       // console.log(ftot);
       var w = (ftot / total) * 100;
       return " width: " + w + "%";
-
     },
   },
 };
@@ -230,6 +237,22 @@ export default {
 
 .fade-in-leave-from {
   max-height: 999px;
+  opacity: 1;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to {
+  opacity: 1;
+}
+
+.fade-leave-from {
   opacity: 1;
 }
 

@@ -21,7 +21,17 @@ module.exports = {
         'burntSienna':'#EE9781',
         'Onyx':'#3d3d3d',
         'sinopia':'#CB410B',
-        'kobe':'#742506'
+        'kobe':'#742506',
+        'imperialRed':'#E63946',
+        'fieryRose':'#EB5C68',
+        'fireEngine':'#C81927',
+        'rubyRed':'#A31420',
+        'candyPink':'#DB736E',
+        'bigDip':'#A31845',
+        'persianRed':'#d33434',
+        'fireBrick':'#b82828',
+        'burgundy':'#6e1423',
+        'crimson':'#a11d33',
       },
       boxShadow: {
        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.45)',

@@ -3,10 +3,10 @@
     <transition appear name="fade-in">
       <div
         v-if="errors.length"
-        class="flex flex-col mx-12 bg-burntSienna p-8 rounded mb-4"
+        class="flex flex-col mx-12 bg-burntSienna p-6 rounded mb-4"
       >
         <span
-          class="text-kobe font-medium"
+          class="text-kobe font-medium ml-4"
           v-for="(error, idx) in errors"
           :key="idx"
           ><box-icon

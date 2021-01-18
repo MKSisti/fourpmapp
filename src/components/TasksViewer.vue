@@ -1,21 +1,21 @@
 <template>
   <!-- <h3>in task viewer</h3> -->
   <div class="w-full mx-auto">
-    <div class="break-words flex justify-start items-center w-full grid grid-cols-6 gap-4">
+    <div class="break-words flex justify-start items-center w-full grid grid-cols-7 gap-4">
       <!-- TODO: add idx -->
       <div class="text-forbase font-black text-left">{{ tid + 1 }}.</div>
       <div class="text-forbase font-medium text-left">
         {{ tname }}
       </div>
-      <div class="text-forbase font-medium text-left">
+      <div class=" col-span-2 text-forbase font-medium text-left">
         {{ tdesc }}
       </div>
       <div class="text-forbase font-medium text-left">{{ tduration }} H</div>
       <!-- TODO: move delete task button here and deal with differences in code later -->
-      <div @click="deleteTask(tname)" class=" cursor-pointer  h-8 w-8">
+      <div @click="deleteTask(tname)" class=" mx-auto cursor-pointer  h-8 w-8">
         <box-icon
           size="cssSize"
-          class="transition duration-300 fill-current text-red-900 h-full w-full hover:text-red-800"
+          class=" transition duration-300  fill-current text-burgundy h-full w-full hover:text-crimson"
           name="minus-square"
           type="solid"
           v-pre

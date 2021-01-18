@@ -58,7 +58,7 @@
     <transition name="fade-in">
       <div
         v-show="showTasks"
-        class="w-3/4 mx-auto bg-gradient-to-r from-green-500 to-blue-500 h-1 mt-5 rounded-full transition-all duration-300"
+        class="w-full  mx-auto bg-gradient-to-r from-green-500 to-blue-500 h-1 mt-5 rounded-full transition-all duration-300"
       ></div>
     </transition>
   </div>
