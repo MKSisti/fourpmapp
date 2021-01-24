@@ -13,18 +13,22 @@
         ></div>
       </div>
 
-      <div @click="toggleShowTasks" class=" mx-auto cursor-pointer  h-8 w-8  transition duration-700 hover: " :class="flippedArrows">
+      <div
+        @click="toggleShowTasks"
+        class="mx-auto cursor-pointer h-8 w-8 transition duration-700 hover:"
+        :class="flippedArrows"
+      >
         <box-icon
           size="cssSize"
-          class="transition duration-300 fill-current text-blue-900 h-full w-full hover:text-blue-800 "
+          class="transition duration-300 fill-current text-blue-900 h-full w-full hover:text-blue-800"
           name="down-arrow-square"
           type="solid"
           v-pre
         ></box-icon>
         <!-- <i class="bx bxs-user-x bx-xs hovers"></i> -->
       </div>
-      
-      <div @click="deletePrj(pname)" class=" mx-auto cursor-pointer  h-8 w-8">
+
+      <div @click="deletePrj" class="mx-auto cursor-pointer h-8 w-8">
         <box-icon
           size="cssSize"
           class="transition duration-300 fill-current text-red-900 h-full w-full hover:text-red-800"
@@ -44,7 +48,7 @@
           @delete-task="deleteTask"
           class="px-12"
           v-for="(task, idx) in ptasks"
-          :key="idx+task.name+task.desc"
+          :key="idx + task.name + task.desc"
           :tid="idx"
           :tname="task.name"
           :tdesc="task.desc"
@@ -58,7 +62,7 @@
     <transition name="fade-in">
       <div
         v-show="showTasks"
-        class="w-full  mx-auto bg-gradient-to-r from-green-500 to-blue-500 h-1 mt-5 rounded-full transition-all duration-300"
+        class="w-full mx-auto bg-gradient-to-r from-green-500 to-blue-500 h-1 mt-5 rounded-full transition-all duration-300"
       ></div>
     </transition>
   </div>
@@ -69,8 +73,13 @@ import tasksViewer from "./TasksViewer.vue";
 
 export default {
   components: { tasksViewer },
-  emits: ["delete-project", "delete-ptask", "finished-ptask",'project-changed'],
-  props: ["pname", "pdesc", "ptasks", "pcustomW"],
+  emits: [
+    "delete-project",
+    "delete-ptask",
+    "finished-ptask",
+    "project-changed",
+  ],
+  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid"],
   name: "projects-viewer",
   data() {
     return {
@@ -79,35 +88,24 @@ export default {
   },
   computed: {
     successPrgrs() {
-      
-      return this.pcustomW.includes('100') ? 'bg-green-400' : 'bg-lightC ';
+      return this.pcustomW.includes("100") ? "bg-green-400" : "bg-lightC ";
     },
-    flippedArrows(){
-      return this.showTasks? 'transform rotate-180' : '';
-    }
+    flippedArrows() {
+      return this.showTasks ? "transform rotate-180" : "";
+    },
   },
   methods: {
-    deletePrj(name) {
-      this.$emit("delete-project", name);
-      this.$emit('project-changed');
+    deletePrj() {
+      this.$emit("delete-project", this.pid);
+      // this.$emit("project-changed");
     },
     deleteTask(name) {
-      // console.log("from project viwer " + name + " " + this.pname);
-      this.$emit("delete-ptask", name, this.pname);
-      this.$emit('project-changed');
+      this.$emit("delete-ptask", name, this.pid);
+      // this.$emit("project-changed");
     },
     finishedTask(name) {
-      this.$emit("finished-ptask", name, this.pname);
-      this.$emit('project-changed');
-      // var i = 0;
-      // for (let idx = 0; idx < this.ptasks.length; idx++) {
-      //   if (this.ptasks[idx].finished == true) {
-      //     i++;
-      //   }
-      // }
-      // var w = (i / this.ptasks.length) * 100;
-      // this.customW = " width: " + w + "%";
-      // console.log(W);
+      this.$emit("finished-ptask", name, this.pid);
+      // this.$emit("project-changed");
     },
     toggleShowTasks() {
       this.showTasks = !this.showTasks;

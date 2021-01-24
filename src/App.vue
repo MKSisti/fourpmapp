@@ -1,13 +1,8 @@
 <template>
-  <section class="w-full space-y-4 py-6 mx-auto lg:w-3/4 select-none">
-    <div
-      class="transition ease duration-300 shadow fixed bg-blue-300 px-3 py-2 rounded opacity-60"
-    >
-      {{ appState }}
-    </div>
-    <div class="transition-all shadow-xl bg-darkC rounded-md py-8 px-12">
+  <section class="w-full space-y-8 ">
+    <nav-bar></nav-bar>
+    <div class="transition-all shadow-xl bg-darkC rounded-md py-8 px-12 lg:w-3/4 select-none mx-auto">
       <h1
-        
         class="mb-6 w-1/4 mx-auto transition duration-150 ease shadow-lg bg-baseC text-center text-2xl uppercase cursor-pointer font-black py-5 text-lightM rounded-xl hover:bg-baseHover"
         @click="ShowAddProject"
       >
@@ -19,12 +14,11 @@
           class="transition-all duration-500 ease"
           v-show="formVisible"
           @add-project="addProject"
-          @project-changed="updateDB"
         ></new-project>
       </transition>
     </div>
 
-    <div class="shadow-xl bg-darkC rounded-md py-8 px-12">
+    <div class="shadow-xl bg-darkC rounded-md py-8 px-12 lg:w-3/4 mx-auto">
       <h1 class="text-center text-fordark text-3xl font-bold mb-12 uppercase">
         Projects List
       </h1>
@@ -32,10 +26,10 @@
         <projects-viewer
           v-for="project in projects"
           @delete-project="deleteProject"
-          @delete-ptask="deleteTask"
+          @delete-ptask="deleteTask2"
           @finished-ptask="finishedTask"
-          @project-changed="updateDB"
-          :key="project.pname"
+          :key="project.id"
+          :pid="project.id"
           :pname="project.name"
           :pdesc="project.desc"
           :ptasks="project.tasks"
@@ -59,17 +53,20 @@
 <script>
 import NewProject from "./components/NewProject.vue";
 import ProjectsViewer from "./components/ProjectsViewer.vue";
-import localforage from "localforage";
+import NavBar from "./components/NavBar.vue";
+// import localforage from "localforage";
+import axios from "axios";
 
 // import "./assets/css/main.css"
 
 // import NewTask from "./components/NewTask.vue";
 
 export default {
-  components: { NewProject, ProjectsViewer },
+  components: { NewProject, ProjectsViewer, NavBar },
   name: "App",
   async created() {
-    await this.getProjects();
+    // await this.getProjects();
+    await this.getAll();
   },
   computed: {
     appState() {
@@ -86,68 +83,93 @@ export default {
     return {
       projects: [],
       formVisible: false,
-      updateTimeout: null,
-      updateCounter: 0,
+      
     };
   },
   methods: {
-    cancelPreUpdate() {
-      if (this.updateTimeout) {
-        clearTimeout(this.updateTimeout);
-      }
-      this.updateTimeout = null;
-    },
-    async updateDB() {
-      this.updateCounter++;
-      this.cancelPreUpdate();
-
-      this.updateTimeout = setTimeout(
-        async () => {
-          await this.createProjects();
-          // console.log(that.projects);
-          this.updateTimeout = null;
-          this.updateCounter = 0;
-        },
-        this.updateCounter > 5 ? 0 : 3000
-      );
-    },
-    async createProjects() {
-      let tmpProj = JSON.stringify({
-        projects: Array.from(this.projects),
-      });
-
+    async creatP(P) {
       try {
-        await localforage.setItem("Projects", tmpProj);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    async getProjects() {
-      try {
-        this.projects = JSON.parse(
-          await localforage.getItem("Projects")
-        ).projects;
-        console.log(this.projects);
+        await axios.post(
+          "https://vue-test-6edc5.firebaseio.com/projects.json",
+          P,
+          { timeout: 3000 }
+        );
       } catch (error) {
-        console.warn("empty database");
+        console.error(error.message);
+      }
+    },
+    async patchP(id, changes) {
+      try {
+        console.log(id);
+        console.log(changes);
+        await axios.patch(
+          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
+          changes,
+          { timeout: 3000 }
+        );
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async deleteP(id) {
+      try {
+        await axios.delete(
+          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
+          { timeout: 3000 }
+        );
+        // console.log(id);
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    async getAll() {
+      try {
+        const all = await axios(
+          "https://vue-test-6edc5.firebaseio.com/projects.json",
+          { timeout: 3000 }
+        );
+        // console.log(all.data);
+        let tmp = [];
+        for (const id in all.data) {
+          tmp.push({
+            id: id,
+            name: all.data[id].name,
+            desc: all.data[id].desc,
+            completion: all.data[id].completion,
+            tasks: all.data[id].tasks,
+          });
+        }
+        this.projects = tmp;
+      } catch (error) {
+        console.error(error.message);
       }
     },
     ShowAddProject() {
       this.formVisible = !this.formVisible;
     },
-    addProject(P) {
-      this.projects.push(P);
-      this.createProjects();
+    async addProject(P) {
+      // this.projects.push(P);
+      // this.createProjects();
+      await this.creatP(P);
+      await this.getAll();
     },
-    deleteProject(name) {
-      this.projects = this.projects.filter((project) => project.name !== name);
-      this.createProjects();
+    async deleteProject(id) {
+      // this.projects.push(P);
+      // this.createProjects();
+      await this.deleteP(id);
+      await this.getAll();
     },
-    deleteTask(taskName, projectName) {
+
+    // async deleteProject(name) {
+    //   this.projects = this.projects.filter((project) => project.name !== name);
+    //   // await this.deleteP(id);
+    //   // this.createProjects();
+    // },
+    deleteTask(taskName, projectId) {
       // this.projects = this.projects.filter((task) => task.name !== name);
       var newArr = [];
       for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].name != projectName) {
+        if (this.projects[i].id != projectId) {
           newArr.push(this.projects[i]);
           // console.log(this.projects[i]);
         } else {
@@ -163,11 +185,30 @@ export default {
       }
       this.projects = newArr;
     },
-    finishedTask(taskName, projectName) {
+    async deleteTask2(taskName, projectId) {
+      // this.projects = this.projects.filter((task) => task.name !== name);
+      var changes = {};
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].id == projectId) {
+          let tmpt = this.projects[i].tasks.filter(
+            (task) => task.name !== taskName
+          );
+          changes = {
+            tasks: tmpt,
+            completion: this.calcW2(tmpt),
+          };
+        }
+      }
+      // console.log(projectId);
+      // console.log(changes);
+      await this.patchP(projectId, changes);
+      await this.getAll();
+    },
+    async finishedTask(taskName, projectId) {
       // this.projects = this.projects.filter((task) => task.name !== name);
 
       for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].name == projectName) {
+        if (this.projects[i].id == projectId) {
           for (let j = 0; j < this.projects[i].tasks.length; j++) {
             if (this.projects[i].tasks[j].name == taskName) {
               this.projects[i].tasks[j].finished = !this.projects[i].tasks[j]
@@ -177,6 +218,11 @@ export default {
           var newW = this.calcW2(this.projects[i].tasks);
           // console.log(newW);
           this.projects[i].completion = newW;
+
+          await this.patchP(projectId, {
+            tasks: this.projects[i].tasks,
+            completion: newW,
+          });
         }
       }
 
@@ -205,7 +251,7 @@ export default {
       }
       // console.log(total);
       // console.log(ftot);
-      var w = (ftot / total) * 100;
+      var w = ((ftot / total) * 100).toFixed(2);
       return " width: " + w + "%";
     },
   },

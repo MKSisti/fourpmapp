@@ -177,10 +177,10 @@ export default {
         this.name = "";
         this.desc = "";
         this.$emit("add-project", newP);
-        this.$emit("project-changed");
-        console.log("all good");
+        // this.$emit("project-changed");
+        // console.log("all good");
       } else {
-        console.log("nope");
+        // console.log("nope");
       }
     },
     deleteTask(name) {
