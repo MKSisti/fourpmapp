@@ -43,7 +43,7 @@
 
     <!-- <div>{{ pdesc }}</div> -->
     <transition name="fade-in">
-      <div class="transition-all duration-300" v-show="showTasks">
+      <div class="transition-all duration-500 ease-in-out" v-show="showTasks">
         <tasks-viewer
           @finished-task="finishedTask"
           @delete-task="deleteTask"

@@ -11,25 +11,25 @@
       <box-icon
         name="error"
         size="cssSize"
-        class="h-full fill-current text-fieryRose animate-bounce"
+        class="h-6 w-6 stroke-current stroke-1 fill-current text-fieryRose animate-bounce"
       ></box-icon>
       <span> ERROR while Loading Projects!! </span>
 
       <box-icon
         name="error"
         size="cssSize"
-        class="h-full fill-current text-fieryRose animate-bounce"
+        class="h-6 w-6 stroke-current stroke-1 fill-current text-fieryRose animate-bounce"
       ></box-icon>
     </div>
     <div
       class="text-center uppercase text-xl font-medium text-fordark"
       v-else-if="loading"
     >
-      Loading Projects
+      <span class="text-xl">Loading Projects</span>
       <box-icon
         size="cssSize"
         name="loader-alt"
-        class="h-5 fill-current text-lightC animate-spin"
+        class="h-5 w-5 stroke-current stroke-1 ml-4 fill-current text-lightC animate-spin"
       ></box-icon>
     </div>
     <div v-else-if="projects.length > 0">
