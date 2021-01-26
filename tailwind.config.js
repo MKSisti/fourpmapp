@@ -32,6 +32,7 @@ module.exports = {
         'fireBrick':'#b82828',
         'burgundy':'#6e1423',
         'crimson':'#a11d33',
+        'darkSkyBlue':'#91BBCA',
       },
       boxShadow: {
        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.45)',

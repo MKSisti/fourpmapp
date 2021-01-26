@@ -1,7 +1,9 @@
 <template>
-  <section class="w-full space-y-8">
+  <section class="w-full space-y-8 select-none">
     <nav-bar></nav-bar>
-    <router-view></router-view>
+    <transition name="slide" mode="in-out">
+      <router-view class="transition-all duration-500 ease"></router-view>
+    </transition>
   </section>
 </template>
 
@@ -21,33 +23,14 @@ import axios from "axios";
 export default {
   components: { NavBar },
   name: "App",
-  // async created() {
-  //   // await this.getProjects();
-  //   await this.getAll();
-  //   console.log(this.projects.length + " created App");
-  // },
-  // mounted() {
-  //   console.log(this.projects.length + " mounted App");
-  // },
+
   provide() {
     return {
       addProject: this.addProject,
-      projects: this.projects,
-      deleteProject: this.deleteProject,
-      deleteTask2: this.deleteTask2,
-      finishedTask: this.finishedTask,
-      getAll: this.getAll,
     };
-  },
-  computed: {
-    appState() {
-      return this.updateTimeout ? "working ..." : "saved";
-    },
   },
   data() {
-    return {
-      projects: [],
-    };
+    return {};
   },
   methods: {
     async creatP(P) {
@@ -61,140 +44,42 @@ export default {
         console.error(error.message);
       }
     },
-    async patchP(id, changes) {
-      try {
-        console.log(id);
-        console.log(changes);
-        await axios.patch(
-          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-          changes,
-          { timeout: 3000 }
-        );
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
-    async deleteP(id) {
-      try {
-        await axios.delete(
-          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-          { timeout: 3000 }
-        );
-        // console.log(id);
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
-    async getAll() {
-      try {
-        const all = await axios(
-          "https://vue-test-6edc5.firebaseio.com/projects.json",
-          { timeout: 3000 }
-        );
-        // console.log(all.data);
-        let tmp = [];
-        for (const id in all.data) {
-          tmp.push({
-            id: id,
-            name: all.data[id].name,
-            desc: all.data[id].desc,
-            completion: all.data[id].completion,
-            tasks: all.data[id].tasks,
-          });
-        }
-        this.projects = tmp;
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
+
     async addProject(P) {
       await this.creatP(P);
-      
-    },
-    async deleteProject(id) {
-      await this.deleteP(id);
-      await this.getAll();
+      this.$router.push("/");
     },
 
-    deleteTask(taskName, projectId) {
-      var newArr = [];
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id != projectId) {
-          newArr.push(this.projects[i]);
-        } else {
-          this.projects[i].tasks = this.projects[i].tasks.filter(
-            (task) => task.name !== taskName
-          );
-          newArr.push(this.projects[i]);
-          var newW = this.calcW2(this.projects[i].tasks);
+    // deleteTask(taskName, projectId) {
+    //   var newArr = [];
+    //   for (let i = 0; i < this.projects.length; i++) {
+    //     if (this.projects[i].id != projectId) {
+    //       newArr.push(this.projects[i]);
+    //     } else {
+    //       this.projects[i].tasks = this.projects[i].tasks.filter(
+    //         (task) => task.name !== taskName
+    //       );
+    //       newArr.push(this.projects[i]);
+    //       var newW = this.calcW2(this.projects[i].tasks);
 
-          this.projects[i].completion = newW;
-        }
-      }
-      this.projects = newArr;
-    },
-    async deleteTask2(taskName, projectId) {
-      var changes = {};
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == projectId) {
-          let tmpt = this.projects[i].tasks.filter(
-            (task) => task.name !== taskName
-          );
-          changes = {
-            tasks: tmpt,
-            completion: this.calcW2(tmpt),
-          };
-        }
-      }
+    //       this.projects[i].completion = newW;
+    //     }
+    //   }
+    //   this.projects = newArr;
+    // },
 
-      await this.patchP(projectId, changes);
-      await this.getAll();
-    },
-    async finishedTask(taskName, projectId) {
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == projectId) {
-          for (let j = 0; j < this.projects[i].tasks.length; j++) {
-            if (this.projects[i].tasks[j].name == taskName) {
-              this.projects[i].tasks[j].finished = !this.projects[i].tasks[j]
-                .finished;
-            }
-          }
-          var newW = this.calcW2(this.projects[i].tasks);
+    // calcW(T) {
+    //   var i = 0;
+    //   for (let idx = 0; idx < T.length; idx++) {
+    //     if (T[idx].finished == true) {
+    //       i++;
+    //     }
+    //   }
+    //   var w = (i / T.length) * 100;
+    //   var W = " width: " + w + "%";
 
-          this.projects[i].completion = newW;
-
-          await this.patchP(projectId, {
-            tasks: this.projects[i].tasks,
-            completion: newW,
-          });
-        }
-      }
-    },
-    calcW(T) {
-      var i = 0;
-      for (let idx = 0; idx < T.length; idx++) {
-        if (T[idx].finished == true) {
-          i++;
-        }
-      }
-      var w = (i / T.length) * 100;
-      var W = " width: " + w + "%";
-
-      return W;
-    },
-    calcW2(T) {
-      var total = 0;
-      var ftot = 0;
-      for (let idx = 0; idx < T.length; idx++) {
-        total += Number(T[idx].duration);
-        if (T[idx].finished == true) {
-          ftot += Number(T[idx].duration);
-        }
-      }
-
-      var w = ((ftot / total) * 100).toFixed(2);
-      return " width: " + w + "%";
-    },
+    //   return W;
+    // },
   },
 };
 </script>
@@ -236,5 +121,19 @@ export default {
 
 .fade-leave-from {
   opacity: 1;
+}
+
+.slide-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>
