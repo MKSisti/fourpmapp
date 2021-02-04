@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-hidden">
+  <div class="">
     <transition appear name="fade-in">
       <div
         v-if="errors.length"
@@ -60,7 +60,12 @@
       </div>
     </div>
 
-    <div class="shadow-inner bg-baseC rounded-xl p-3">
+    <base-card
+      :color="'bg-baseC'"
+      :shadow="'shadow-inner'"
+      :padding="'p-3'"
+      :width="'w-5/6'"
+    >
       <h1 class="text-forbase text-xl uppercase font-bold mb-4">
         add tasks to the project
       </h1>
@@ -72,11 +77,11 @@
       >
         No Tasks yet, try adding some using the form above.
       </div>
-      <div v-else class="mt-3 mx-24">
+      <div v-else class="mt-3 mx-24 overflow-auto max-h-40">
         <div
           v-for="(task, idx) in tasks"
           :key="idx"
-          class="flex flex-row w-full"
+          class="flex flex-row w-full "
         >
           <tasks-viewer
             @delete-task="deleteTask"
@@ -87,37 +92,19 @@
             :tseparator="true"
             :tcanBeMarked="false"
           ></tasks-viewer>
-          <!-- <div @click="deleteTask(task.name)" class="ml-12 cursor-pointer">
-             <svg class="h-6 w-6 fill-current text-green-600" src="../assets/icons/trash.svg" alt="X"  > 
-            <svg class="fill-current text-red-900 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path
-                
-                d="M6 2l2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z"
-              />
-            </svg>
-
-             <i class="bx bxs-user-x bx-xs hovers"></i> 
-          </div> -->
         </div>
       </div>
-    </div>
-
-    <div class="">
-      <!-- <div @click="confirmProject" class="">
-         <div class="btnIcon"></div> 
-        <div class="">Confirm Project</div>
-      </div> -->
-      <h1
-        class="shadow-xl transition duration-150 ease-in-out shadow-lg mx-auto mt-4 bg-baseC text-center text-2xl uppercase cursor-pointer font-black p-5 text-lightM rounded-xl hover:bg-baseHover"
-        @click="confirmProject"
-      >
-        Confirm Project
-      </h1>
-    </div>
+    </base-card>
+    <!-- </div> -->
+    <base-button @click="confirmProject" :type="'forProject'">
+      Confirm Project
+    </base-button>
   </div>
 </template>
 
 <script>
+import BaseButton from "./BaseComponents/BaseButton.vue";
+import BaseCard from "./BaseComponents/BaseCard.vue";
 // import newTask from "NewTask.vue";
 import NewTask from "./NewTask.vue";
 import TasksViewer from "./TasksViewer.vue";
@@ -125,7 +112,7 @@ import TasksViewer from "./TasksViewer.vue";
 export default {
   name: "project",
   emits: ["add-project", "project-changed"],
-  components: { NewTask, TasksViewer },
+  components: { NewTask, TasksViewer, BaseCard, BaseButton },
   data() {
     return {
       name: null,

@@ -2,7 +2,9 @@
   <div class="mx-8">
     <div class="flex flex-row space-x-2 mb-4 xl:space-x-12">
       <div class="w-1/3">
-        <label class="text-lightL block uppercase font-bold text-lg" for="task-name"
+        <label
+          class="text-lightL block uppercase font-bold text-lg"
+          for="task-name"
           >Name</label
         >
         <input
@@ -18,7 +20,9 @@
         />
       </div>
       <div class="flex-grow">
-        <label class="text-lightL block uppercase font-bold text-lg" for="task-desc"
+        <label
+          class="text-lightL block uppercase font-bold text-lg"
+          for="task-desc"
           >Description</label
         >
         <input
@@ -56,22 +60,18 @@
       </div>
 
       <div class="w-1/2 mt-auto">
-        <h2
-          @click="confirmTask"
-          class="transition duration-150 ease-in-out shadow-lg mx-auto h-full bg-lightC text-center text-xl uppercase cursor-pointer font-bold p-5 text-lightM rounded-xl hover:bg-lightHover"
-        >
-          <!-- <div @click="confirmTask" class="  bg-light flex-col text-center rounded-lg cursor-pointer h-full"> -->
-          <!-- <div class="btnIcon"></div> -->
+        <base-button @click="confirmTask" :type="'forTask'">
           Add task
-          <!-- <h2 class="mx-auto text-lightM font-bold text-2xl">Add Task</h2> -->
-        </h2>
+        </base-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BaseButton from "./BaseComponents/BaseButton.vue";
 export default {
+  components: { BaseButton },
   name: "task",
   emits: ["add-task"],
   data() {

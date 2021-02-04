@@ -1,9 +1,8 @@
 <template>
   <div class="mb-12">
-    <!-- <h2>in project viewer</h2> -->
     <div class="break-words grid grid-cols-8 items-center mb-3 w-full">
-      <div class="col-span-2 text-lightL text-xl font-bold uppercase">
-        {{ pname }}
+      <div class="truncate col-span-2 text-lightL text-xl font-bold uppercase">
+        <router-link :to="{ name: 'project', params: { ProjectId: pid }}">{{ pname }}</router-link>
       </div>
       <div class="col-span-4 h-5 bg-prgrs mt-1 rounded-full">
         <div
@@ -15,10 +14,9 @@
 
       <div
         @click="toggleShowTasks"
-        class="mx-auto cursor-pointer h-8 w-8 transition duration-700 "
+        class="mx-auto cursor-pointer h-8 w-8 transition duration-700"
         :class="flippedArrows"
       >
-        
         <box-icon
           size="cssSize"
           class="transition duration-300 fill-current text-blue-900 h-full w-full hover:text-blue-800"

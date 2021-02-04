@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-xl bg-darkC rounded-md py-8 px-12 lg:w-3/4 mx-auto">
+  <base-card>
     <h1 class="text-center text-fordark text-3xl font-bold mb-12 uppercase">
       Projects List
     </h1>
@@ -50,7 +50,7 @@
     <div class="text-center uppercase text-xl font-medium text-fordark" v-else>
       No items to show
     </div>
-  </div>
+  </base-card>
 </template>
 
 <script>

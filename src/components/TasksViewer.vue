@@ -1,21 +1,21 @@
 <template>
   <!-- <h3>in task viewer</h3> -->
-  <div class="w-full mx-auto">
-    <div class="break-words flex justify-start items-center w-full grid grid-cols-7 gap-4">
+  <div class="w-5/6 mx-auto">
+    <div class="break-words w-full grid grid-cols-7 gap-6 items-center">
       <!-- TODO: add idx -->
-      <div class="text-forbase font-black text-left">{{ tid + 1 }}.</div>
+      <div class="text-forbase font-black text-center">{{ tid + 1 }} .</div>
       <div class="text-forbase font-medium text-left">
         {{ tname }}
       </div>
       <div class=" col-span-2 text-forbase font-medium text-left">
         {{ tdesc }}
       </div>
-      <div class="text-forbase font-medium text-left">{{ tduration }} H</div>
+      <div class="text-forbase font-medium text-right">{{ tduration }} H</div>
       <!-- TODO: move delete task button here and deal with differences in code later -->
-      <div @click="deleteTask(tname)" class=" mx-auto cursor-pointer  h-8 w-8">
+      <div @click="deleteTask(tname)" class=" cursor-pointer ml-16 h-8 w-8">
         <box-icon
           size="cssSize"
-          class=" transition duration-300  fill-current text-burgundy h-full w-full hover:text-crimson"
+          class=" transition duration-300  fill-current text-burgundy h-full w-full  hover:text-crimson"
           name="minus-square"
           type="solid"
           v-pre
@@ -51,7 +51,7 @@
     </div>
     <div
       v-show="tseparator"
-      class="mx-auto w-3/4 bg-darkL h-2 mt-5 rounded-full"
+      class="mx-auto w-full bg-lightC h-1 mt-2 mb-2 rounded-full"
     ></div>
   </div>
 </template>
