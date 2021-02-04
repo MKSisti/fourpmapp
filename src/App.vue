@@ -27,7 +27,7 @@ export default {
   opacity: 0;
 }
 .slide-leave-to {
-  transform: translateX(-30px);
+  transform: translateX(-50px);
   opacity: 0;
 }
 .slide-enter-active,

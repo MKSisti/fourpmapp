@@ -36,7 +36,7 @@
       <projects-viewer
         v-for="project in projects"
         @delete-project="deleteProject"
-        @delete-ptask="deleteTask2"
+        @delete-ptask="deleteTask"
         @finished-ptask="finishedTask"
         :key="project.id"
         :pid="project.id"
@@ -55,122 +55,42 @@
 
 <script>
 import ProjectsViewer from "../components/ProjectsViewer.vue";
-import axios from "axios";
+import { mapGetters } from "vuex";
+// import axios from "axios";
 
 export default {
   components: { ProjectsViewer },
-  data() {
-    return {
-      projects: [],
-      loading: false,
-      err: false,
-    };
+  computed: {
+    ...mapGetters({
+      projects: "getProjects",
+      loading: "getLoading",
+      err: "getLoadingErr",
+    }),
   },
   methods: {
-    async patchP(id, changes) {
-      try {
-        await axios.patch(
-          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-          changes,
-          { timeout: 3000 }
-        );
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
-    async deleteP(id) {
-      try {
-        await axios.delete(
-          "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-          { timeout: 3000 }
-        );
-      } catch (error) {
-        console.error(error.message);
-      }
-    },
-    async getAll() {
-      try {
-        this.err = false;
-        this.loading = true;
-        const all = await axios(
-          "https://vue-test-6edc5.firebaseio.com/projects.json",
-          { timeout: 3000 }
-        );
-        let tmp = [];
-        for (const id in all.data) {
-          tmp.push({
-            id: id,
-            name: all.data[id].name,
-            desc: all.data[id].desc,
-            completion: all.data[id].completion,
-            tasks: all.data[id].tasks,
-          });
-        }
-        this.projects = tmp;
-        this.loading = false;
-      } catch (error) {
-        console.error(error.message);
-        this.err = true;
-        this.loading = false;
-      }
-    },
     async deleteProject(id) {
-      await this.deleteP(id);
-      await this.getAll();
+      console.log(id);
+      await this.$store.dispatch("deleteP", id);
+      await this.$store.dispatch("getAll");
     },
-    async deleteTask2(taskName, projectId) {
-      var changes = {};
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == projectId) {
-          let tmpt = this.projects[i].tasks.filter(
-            (task) => task.name !== taskName
-          );
-          changes = {
-            tasks: tmpt,
-            completion: this.calcW2(tmpt),
-          };
-        }
-      }
-
-      await this.patchP(projectId, changes);
-      await this.getAll();
+    async deleteTask(taskName, projectId) {
+      await this.$store.dispatch("deleteTask", {
+        projectId,
+        taskName,
+      });
+      console.log(taskname + ' ' + projectId);
     },
     async finishedTask(taskName, projectId) {
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == projectId) {
-          for (let j = 0; j < this.projects[i].tasks.length; j++) {
-            if (this.projects[i].tasks[j].name == taskName) {
-              this.projects[i].tasks[j].finished = !this.projects[i].tasks[j]
-                .finished;
-            }
-          }
-          var newW = this.calcW2(this.projects[i].tasks);
-
-          this.projects[i].completion = newW;
-
-          await this.patchP(projectId, {
-            tasks: this.projects[i].tasks,
-            completion: newW,
-          });
-        }
-      }
-    },
-    calcW2(T) {
-      var total = 0;
-      var ftot = 0;
-      for (let idx = 0; idx < T.length; idx++) {
-        total += Number(T[idx].duration);
-        if (T[idx].finished == true) {
-          ftot += Number(T[idx].duration);
-        }
-      }
-
-      var w = ((ftot / total) * 100).toFixed(2);
-      return " width: " + w + "%";
+      await this.$store.dispatch("finishedTask", {
+        taskName,
+        projectId,
+      });
+      // console.log('from showAll' + taskName + ' ' + projectId);
     },
   },
-  created() {
-    this.getAll();
+  async created() {
+    // this.getAll();
+    await this.$store.dispatch("getAll");
   },
 };
 </script>

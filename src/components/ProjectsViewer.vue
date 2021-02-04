@@ -104,6 +104,7 @@ export default {
     },
     finishedTask(name) {
       this.$emit("finished-ptask", name, this.pid);
+      // console.log(name + ' ' + this.pid);
       // this.$emit("project-changed");
     },
     toggleShowTasks() {

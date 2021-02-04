@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
+import store from "./store/index.js";
 import "@/assets/css/main.css";
 import "boxicons";
 
@@ -36,4 +37,5 @@ app.component("BaseCard", BaseCard);
 app.component("BaseButton", BaseButton);
 
 app.use(router);
+app.use(store);
 app.mount("#app");

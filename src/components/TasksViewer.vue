@@ -61,13 +61,7 @@ export default {
   name: "tasks-viewer",
   emits: ["delete-task", "finished-task"],
   props: ["tid", "tname", "tdesc", "tduration", "tseparator", "tcanBeMarked",'tfinished'],
-  data() {
-    return {
-    };
-  },
-  computed: {
-    
-  },
+  
   methods: {
     deleteTask(name) {
       // console.log("delete task");
