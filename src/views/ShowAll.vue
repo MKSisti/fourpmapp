@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     async deleteProject(id) {
-      console.log(id);
+      // console.log(id);
       await this.$store.dispatch("deleteP", id);
       await this.$store.dispatch("getAll");
     },
@@ -78,14 +78,12 @@ export default {
         projectId,
         taskName,
       });
-      console.log(taskname + ' ' + projectId);
     },
     async finishedTask(taskName, projectId) {
       await this.$store.dispatch("finishedTask", {
         taskName,
         projectId,
       });
-      // console.log('from showAll' + taskName + ' ' + projectId);
     },
   },
   async created() {
