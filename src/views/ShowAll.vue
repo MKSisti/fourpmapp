@@ -86,9 +86,5 @@ export default {
       });
     },
   },
-  async created() {
-    // this.getAll();
-    await this.$store.dispatch("getAll");
-  },
 };
 </script>

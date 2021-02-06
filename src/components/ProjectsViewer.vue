@@ -47,7 +47,7 @@
           @delete-task="deleteTask"
           class="px-12"
           v-for="(task, idx) in ptasks"
-          :key="idx + task.name + task.desc"
+          :key="idx + task.name + pid"
           :tid="idx"
           :tname="task.name"
           :tdesc="task.desc"
