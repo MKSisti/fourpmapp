@@ -9,7 +9,7 @@ const store = createStore({
     return {
       projects: [],
       projectsCount: 0,
-      loading: false,
+      loading: true,
       err: false,
     };
   },

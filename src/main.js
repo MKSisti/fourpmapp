@@ -21,6 +21,7 @@ app.use(router);
 app.use(store);
 app.mount("#app");
 
+//todo: move this init to actions
 db.ref("/projects")
   .get()
   .then(function(ds) {
@@ -33,4 +34,5 @@ db.ref("/projects")
         tasks: p.val().tasks,
       });
     });
+    store.state.loading = false;
   });
