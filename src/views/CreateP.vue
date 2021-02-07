@@ -13,7 +13,7 @@ export default {
   methods: {
     async addProject(P) {
       // await this.creatP(P);
-      await this.$store.dispatch("createP", P);
+      await this.$store.dispatch("newCreateP", P);
       await this.$store.dispatch("getAll");
       this.$router.push("/");
     },

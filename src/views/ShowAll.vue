@@ -70,7 +70,7 @@ export default {
   methods: {
     async deleteProject(id) {
       // console.log(id);
-      await this.$store.dispatch("deleteP", id);
+      await this.$store.dispatch("newDeleteP", id);
       await this.$store.dispatch("getAll");
     },
     async deleteTask(taskName, projectId) {

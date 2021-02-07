@@ -1,4 +1,5 @@
 import axios from "axios";
+import { projects } from "../firebase.js";
 
 function calcNewWidth(T) {
   var total = 0;
@@ -15,6 +16,9 @@ function calcNewWidth(T) {
 }
 
 export default {
+  async newCreateP(_, P) {
+    await projects.push(P);
+  },
   async createP(_, P) {
     try {
       await axios.post(
@@ -25,6 +29,11 @@ export default {
     } catch (error) {
       console.error(error.message);
     }
+  },
+  async newPatchP(_, payload) {
+    var p = projects.child(payload.id);
+    await p.update(payload.changes);
+    // console.log(payload.id);
   },
   async patchP(_, payload) {
     try {
@@ -38,6 +47,16 @@ export default {
     } catch (error) {
       console.error(error.message);
     }
+  },
+  async newDeleteP(_, id) {
+    var p = projects.child(id);
+    await p.remove()
+      .then(function() {
+        console.log("Remove succeeded.");
+      })
+      .catch(function(error) {
+        console.log("Remove failed: " + error.message);
+      });
   },
   async deleteP(_, id) {
     try {
@@ -89,9 +108,9 @@ export default {
       //   this.desc = One.data.desc;
       //   this.name = One.data.name;
       //   this.tasks = One.data.tasks;
-    
-    //   console.log('from getOne :'+id);
-    //   console.log(One.data); 
+
+      //   console.log('from getOne :'+id);
+      //   console.log(One.data);
       commit("setLoading", false);
       return One;
     } catch (error) {
@@ -120,7 +139,7 @@ export default {
       }
     }
 
-    await dispatch("patchP", {
+    await dispatch("newPatchP", {
       id,
       changes,
     });
@@ -147,7 +166,7 @@ export default {
         // console.log(newW);
         var id = payload.projectId;
 
-        await dispatch("patchP", {
+        await dispatch("newPatchP", {
           id,
           changes,
         });

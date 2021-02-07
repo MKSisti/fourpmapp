@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import mutations from "./mutations.js";
 import actions from "./actions.js";
 import getters from "./getters.js";
+// import projects from '../firebase.js'
 
 const store = createStore({
   state() {
@@ -16,5 +17,6 @@ const store = createStore({
   actions: actions,
   getters: getters,
 });
+
 
 export default store;

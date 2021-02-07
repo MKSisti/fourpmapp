@@ -2,7 +2,7 @@
   <section class="w-full space-y-8 select-none">
     <nav-bar></nav-bar>
     <!-- class="transition-all duration-500 ease" -->
-    <router-view :key="this.$route.fullpath" v-slot="{ Component }">
+    <router-view  v-slot="{ Component }">
       <suspense>
         <transition name="slide" mode="out-in">
           <component :is="Component"></component>
@@ -20,7 +20,7 @@ export default {
   name: "App",
 
   async created() {
-    await this.$store.dispatch("getAll");
+    // await this.$store.dispatch("getAll");
   },
 };
 </script>
