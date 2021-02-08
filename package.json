@@ -9,11 +9,9 @@
   },
   "dependencies": {
     "axios": "^0.20.0-0",
-    "boxicons": "^2.0.7",
     "copy-webpack-plugin": "^6.2.1",
     "core-js": "^3.8.2",
     "firebase": "^8.2.6",
-    "localforage": "^1.9.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

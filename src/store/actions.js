@@ -1,6 +1,5 @@
-// import axios from "axios";
 import { projects } from "../firebase.js";
-
+  
 function calcNewWidth(T) {
   var total = 0;
   var ftot = 0;
@@ -12,10 +11,39 @@ function calcNewWidth(T) {
   }
 
   var w = ((ftot / total) * 100).toFixed(2);
-  return " width: " + w + "%";
+  return "width: " + w + "%";
 }
 
 export default {
+  // async storeInit({ state }) {
+  //   await projects.once("value", function(ds) {
+  //     state.loading = true;
+  //     state.projects = [];
+
+  //     ds.forEach(function(p) {
+  //       state.projects.push({
+  //         id: p.key,
+  //         name: p.val().name,
+  //         desc: p.val().desc,
+  //         completion: p.val().completion,
+  //         tasks: p.val().tasks,
+  //       });
+  //     });
+  //     state.loading = false;
+  //   });
+  // },
+  // async storeOnProjectAdded({ state }) {
+  //   projects.on("child_added", function(ds) {
+  //     // var id = ds.key
+  //     state.projects.push({
+  //       id: ds.key,
+  //       name: ds.val().name,
+  //       desc: ds.val().desc,
+  //       completion: ds.val().completion,
+  //       tasks: ds.val().tasks,
+  //     });
+  //   });
+  // },
   async newCreateP(_, P) {
     await projects.push(P);
   },
@@ -44,7 +72,7 @@ export default {
         let tmpt = state.projects[i].tasks.filter(
           (task) => task.name !== payload.taskName
         );
-        let newW = tmpt.length>0? calcNewWidth(tmpt) : '0';
+        let newW = tmpt.length > 0 ? calcNewWidth(tmpt) : "width: 0%";
 
         state.projects[i].tasks = tmpt;
         state.projects[i].completion = newW;
