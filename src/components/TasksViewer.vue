@@ -3,49 +3,45 @@
   <div class="w-5/6 mx-auto">
     <div class="break-words w-full grid grid-cols-7 gap-6 items-center">
       <!-- TODO: add idx -->
-      <div class="text-forbase font-black text-center">{{ tid + 1 }} .</div>
-      <div class="text-forbase font-medium text-left">
+      <div class="text-lighter font-black text-center">{{ tid + 1 }} .</div>
+      <div class="text-lighter font-medium text-left">
         {{ tname }}
       </div>
-      <div class=" col-span-2 text-forbase font-medium text-left">
+      <div class="col-span-2 text-lighter font-medium text-left">
         {{ tdesc }}
       </div>
-      <div class="text-forbase font-medium text-right">{{ tduration }} H</div>
-      <!-- TODO: move delete task button here and deal with differences in code later -->
-      <div @click="deleteTask(tname)" class=" cursor-pointer ml-16 h-8 w-8">
-        <box-icon
-          size="cssSize"
-          class=" transition duration-300  fill-current text-burgundy h-full w-full  hover:text-crimson"
-          name="minus-square"
-          type="solid"
-          v-pre
-        ></box-icon>
-        <!-- <i class="bx bxs-user-x bx-xs hovers"></i> -->
+      <div class="text-lighter font-medium text-right">{{ tduration }} H</div>
+      <div
+        @click="deleteTask(tname)"
+        class="cursor-pointer ml-7 lg:ml-16 h-8 w-8"
+      >
+        <base-icon
+          h="32"
+          w="32"
+          name="minus"
+          class="fill-current text-rd"
+        />
       </div>
       <div
-        class=" cursor-pointer h-10 w-10"
+        class="cursor-pointer h-8 w-8"
         v-show="tcanBeMarked"
         @click="finishedTask(tname)"
       >
         <transition name="fade-in">
-          <div v-if="!tfinished" class="transition duration-300">
-            <box-icon
-              size="cssSize"
-              class="stroke-current text-green-400 w-full h-full stroke-0"
-              name="checkbox"
-              type="solid"
-              v-pre
-            ></box-icon>
+          <div>
+            <base-icon
+              h="32"
+              w="32"
+              :name="tfinished ? 'check-checked' : 'check-blank'"
+              :class="tfinished ? 'fill-current text-grn' : 'fill-current text-darkC'"
+            />
+          </div>
+          <!-- <div v-if="!tfinished" class="transition duration-300">
+            <base-icon h="32" w="32" name="check-blank" />
           </div>
           <div v-else class="transition duration-300">
-            <box-icon
-              size="cssSize"
-              class="fill-current text-green-400  w-full h-full "
-              name="checkbox-checked"
-              type="solid"
-              v-pre
-            ></box-icon>
-          </div>
+            <base-icon h="32" w="32" name="check-checked" />
+          </div> -->
         </transition>
       </div>
     </div>
@@ -57,11 +53,21 @@
 </template>
 
 <script>
+import BaseIcon from "./BaseComponents/BaseIcon.vue";
 export default {
+  components: { BaseIcon },
   name: "tasks-viewer",
   emits: ["delete-task", "finished-task"],
-  props: ["tid", "tname", "tdesc", "tduration", "tseparator", "tcanBeMarked",'tfinished'],
-  
+  props: [
+    "tid",
+    "tname",
+    "tdesc",
+    "tduration",
+    "tseparator",
+    "tcanBeMarked",
+    "tfinished",
+  ],
+
   methods: {
     deleteTask(name) {
       // console.log("delete task");

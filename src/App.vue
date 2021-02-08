@@ -19,8 +19,9 @@ export default {
   components: { NavBar },
   name: "App",
 
-  async created() {
+  created() {
     // await this.$store.dispatch("getAll");
+    console.log('created');
   },
 };
 </script>

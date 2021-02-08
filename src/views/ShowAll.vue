@@ -1,36 +1,38 @@
 <template>
   <base-card>
-    <h1 class="text-center text-fordark text-3xl font-bold mb-12 uppercase">
+    <h1 class="text-center text-lighter text-3xl font-bold mb-12 uppercase">
       Projects List
     </h1>
 
     <div
-      class="text-center uppercase text-xl font-medium text-fordark"
+      class="text-center uppercase text-xl font-medium text-lighter"
       v-if="err"
     >
-      <box-icon
+      <base-icon
         name="error"
-        size="cssSize"
-        class="h-6 w-6 stroke-current stroke-1 fill-current text-fieryRose animate-bounce"
-      ></box-icon>
-      <span> ERROR while Loading Projects!! </span>
-
-      <box-icon
+        h="1.5rem"
+        w="1.5rem"
+        class="inline-block mr-4 mb-2 animate-bounce fill-current text-burntSienna"
+      />
+      <span>ERROR while Loading Projects!!</span>
+      <base-icon
         name="error"
-        size="cssSize"
-        class="h-6 w-6 stroke-current stroke-1 fill-current text-fieryRose animate-bounce"
-      ></box-icon>
+        h="1.5rem"
+        w="1.5rem"
+        class="inline-block ml-4 mb-2 animate-bounce fill-current text-burntSienna"
+      />
     </div>
     <div
-      class="text-center uppercase text-xl font-medium text-fordark"
+      class="text-center uppercase text-xl font-medium text-lighter"
       v-else-if="loading"
     >
       <span class="text-xl">Loading Projects</span>
-      <box-icon
-        size="cssSize"
-        name="loader-alt"
-        class="h-5 w-5 stroke-current stroke-1 ml-4 fill-current text-lightC animate-spin"
-      ></box-icon>
+      <base-icon
+        name="loading"
+        h="1.5rem"
+        w="1.5rem"
+        class="inline-block ml-4 mb-2 animate-spin fill-current text-lighter"
+      />
     </div>
     <div v-else-if="projects.length > 0">
       <projects-viewer
@@ -42,12 +44,12 @@
         :pid="project.id"
         :pname="project.name"
         :pdesc="project.desc"
-        :ptasks="project.tasks"
+        :ptasks="project.tasks?project.tasks:null"
         :pcustomW="project.completion"
       ></projects-viewer>
     </div>
 
-    <div class="text-center uppercase text-xl font-medium text-fordark" v-else>
+    <div class="text-center uppercase text-xl font-medium text-lighter" v-else>
       No items to show
     </div>
   </base-card>
@@ -56,10 +58,11 @@
 <script>
 import ProjectsViewer from "../components/ProjectsViewer.vue";
 import { mapGetters } from "vuex";
+import BaseIcon from "../components/BaseComponents/BaseIcon.vue";
 // import axios from "axios";
 
 export default {
-  components: { ProjectsViewer },
+  components: { ProjectsViewer, BaseIcon },
   computed: {
     ...mapGetters({
       projects: "getProjects",

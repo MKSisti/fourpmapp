@@ -4,20 +4,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'darkest': '#113958',
-        'darkL':'#2E4F68',
-        'darkM':'#235780',
-        'darkC':'#2D6795',
-        'baseC':'#4990C8',
-        'lightC':'#6ACEFF',
-        'lightM':'#DBF6FF',
-        'lightL':'#D9EEFF',
-        'fordark':'#C1D9E1',
-        'forbase':'#D1D1D1',
-        'fordarker':'#9CA8AC',
-        'prgrs':'#F6F6F6',
-        'baseHover':'#57A9E9',
-        'lightHover': '#66C7F6',
+        'darkest': '#0A0B0D',
+        'darker':'#17181B',
+        'darkC':'#212226',
+        'lightC':'#556077',
+        'lighter':'#959DB2',
+        'prgrs':'#E8E8E8',
+        'grn':'#73c991',
+        'grn-h':'#009E45',
+        'rd':'#DF6A70',
+        'rd-h':'#C93F3A',
+        'bl':'#13287D',
+        'bl-d':'#133463',
+        'bl-dh':'#194582',
+        'bl-h':'#152D96',
+        'bl-l':'#2E4FA3',
+        'bl-lh':'#3155B0',
+        'lightHover': '#627BBC',
         'burntSienna':'#EE9781',
         'Onyx':'#3d3d3d',
         'sinopia':'#CB410B',
@@ -37,7 +40,11 @@ module.exports = {
       boxShadow: {
        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.45)',
         
-      }
+      },
+      strokeWidth: {
+        '3': '3',
+        '4': '4',
+       }
     },
     
   },

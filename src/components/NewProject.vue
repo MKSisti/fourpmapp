@@ -9,12 +9,10 @@
           class="text-kobe font-medium ml-4"
           v-for="(error, idx) in errors"
           :key="idx"
-          ><box-icon
-            size="cssSize"
-            class="fill-current h-3 w-3"
-            type="solid"
-            name="circle"
-          ></box-icon>
+        >
+          
+            <base-icon name="circle" w="0.5rem" h="0.5rem" class="stroke-current stroke-3 text-darkC inline-block mb-1" />
+          
           {{ error }}
         </span>
       </div>
@@ -22,13 +20,13 @@
     <div class="flex justify-center space-x-6 mb-8 mx-12 lg:space-x-12">
       <div class="w-1/2">
         <label
-          class="text-lightL mb-1 block uppercase font-bold text-2xl"
+          class="text-lighter mb-1 block uppercase font-bold text-2xl"
           for="project-name"
           >Name</label
         >
         <input
           v-model="name"
-          class="rounded-md w-full py-4 px-4 bg-darkest focus:bg-darkL font-semibold text-xl text-lightL focus:outline-none border-2 border-lightC focus:border-lightM"
+          class="placeholder-gray-500 placeholder-opacity-50 rounded-md w-full py-4 px-4 bg-darker font-semibold text-xl text-lighter focus:outline-none border border-lightC"
           type="text"
           id="project-name"
           name="project-name"
@@ -41,13 +39,13 @@
       </div>
       <div class="w-1/2">
         <label
-          class="text-lightL mb-1 block uppercase font-bold text-2xl"
+          class="text-lighter mb-1 block uppercase font-bold text-2xl"
           for="project-desc"
           >Description</label
         >
         <input
           v-model="desc"
-          class="rounded-md w-full py-4 px-4 bg-darkest focus:bg-darkL text-lightL font-semibold text-xl focus:outline-none border-2 border-lightC focus:border-lightM"
+          class="placeholder-gray-500 placeholder-opacity-50 rounded-md w-full py-4 px-4 bg-darker font-semibold text-xl text-lighter focus:outline-none border border-lightC"
           type="text"
           id="project-desc"
           name="project-desc"
@@ -61,19 +59,19 @@
     </div>
 
     <base-card
-      :color="'bg-baseC'"
+      :color="'bg-darkC'"
       :shadow="'shadow-inner'"
       :padding="'p-3'"
-      :width="'w-5/6'"
+      :width="'lg:w-5/6'"
     >
-      <h1 class="text-forbase text-xl uppercase font-bold mb-4">
+      <h1 class="text-lighter text-xl uppercase font-bold mb-4">
         add tasks to the project
       </h1>
       <new-task @add-task="addTask"></new-task>
 
       <div
         v-if="tasks.length === 0"
-        class="text-center text-forbase uppercase text-xl font-medium"
+        class="text-center text-lighter uppercase text-xl font-medium"
       >
         No Tasks yet, try adding some using the form above.
       </div>
@@ -81,7 +79,7 @@
         <div
           v-for="(task, idx) in tasks"
           :key="idx"
-          class="flex flex-row w-full "
+          class="flex flex-row w-full"
         >
           <tasks-viewer
             @delete-task="deleteTask"
@@ -105,6 +103,7 @@
 <script>
 import BaseButton from "./BaseComponents/BaseButton.vue";
 import BaseCard from "./BaseComponents/BaseCard.vue";
+import BaseIcon from "./BaseComponents/BaseIcon.vue";
 // import newTask from "NewTask.vue";
 import NewTask from "./NewTask.vue";
 import TasksViewer from "./TasksViewer.vue";
@@ -112,7 +111,7 @@ import TasksViewer from "./TasksViewer.vue";
 export default {
   name: "project",
   emits: ["add-project", "project-changed"],
-  components: { NewTask, TasksViewer, BaseCard, BaseButton },
+  components: { NewTask, TasksViewer, BaseCard, BaseButton, BaseIcon },
   data() {
     return {
       name: null,

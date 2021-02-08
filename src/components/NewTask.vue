@@ -3,7 +3,7 @@
     <div class="flex flex-row space-x-2 mb-4 xl:space-x-12">
       <div class="w-1/3">
         <label
-          class="text-lightL block uppercase font-bold text-lg"
+          class="text-lighter block uppercase font-bold text-lg"
           for="task-name"
           >Name</label
         >
@@ -11,7 +11,7 @@
           v-model="name"
           placeholder="task name"
           :class="makeRed"
-          class="rounded-md w-full py-4 px-4 bg-darkM text-lightL text-xl font-semibold focus:outline-none border-2 border-lightC focus:border-lightM"
+          class="rounded-md w-full py-4 px-4 bg-darkC text-lighter text-xl font-semibold focus:outline-none border border-lightC placeholder-opacity-50 placeholder-gray-500"
           type="text"
           id="task-name"
           name="task-name"
@@ -21,7 +21,7 @@
       </div>
       <div class="flex-grow">
         <label
-          class="text-lightL block uppercase font-bold text-lg"
+          class="text-lighter block uppercase font-bold text-lg"
           for="task-desc"
           >Description</label
         >
@@ -29,7 +29,7 @@
           v-model="desc"
           placeholder="task description"
           :class="makeRed"
-          class="rounded-md w-full py-4 px-4 bg-darkM text-lightL text-xl font-semibold focus:outline-none border-2 border-lightC focus:border-lightM"
+          class="rounded-md w-full py-4 px-4 bg-darkC text-lighter text-xl font-semibold focus:outline-none border border-lightC placeholder-opacity-50 placeholder-gray-500"
           type="text"
           id="task-desc"
           name="task-desc"
@@ -41,14 +41,14 @@
     <div class="flex flex-row space-x-2 mb-4 mt-2 xl:space-x-12">
       <div class="w-1/2">
         <label
-          class="text-lightL block uppercase font-bold text-lg"
+          class="text-lighter block uppercase font-bold text-lg"
           for="duration"
           >Duration<i class="text-sm"> ( in hours )</i></label
         >
         <input
           v-model="duration"
           :class="makeRed"
-          class="rounded-md w-full py-4 px-4 bg-darkM text-lightL text-xl font-semibold focus:outline-none border-2 border-lightC focus:border-lightM"
+          class="rounded-md w-full py-4 px-4 bg-darkC text-lighter text-xl font-semibold focus:outline-none border border-lightC placeholder-opacity-50 placeholder-gray-500"
           type="number"
           min="0"
           max="168"

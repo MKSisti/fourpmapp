@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { projects } from "../firebase.js";
 
 function calcNewWidth(T) {
@@ -19,106 +19,22 @@ export default {
   async newCreateP(_, P) {
     await projects.push(P);
   },
-  async createP(_, P) {
-    try {
-      await axios.post(
-        "https://vue-test-6edc5.firebaseio.com/projects.json",
-        P,
-        { timeout: 8000 }
-      );
-    } catch (error) {
-      console.error(error.message);
-    }
-  },
   async newPatchP(_, payload) {
     var p = projects.child(payload.id);
     await p.update(payload.changes);
     // console.log(payload.id);
   },
-  async patchP(_, payload) {
-    try {
-      await axios.patch(
-        "https://vue-test-6edc5.firebaseio.com/projects/" +
-          payload.id +
-          ".json",
-        payload.changes,
-        { timeout: 8000 }
-      );
-    } catch (error) {
-      console.error(error.message);
-    }
-  },
   async newDeleteP(_, id) {
     var p = projects.child(id);
-    await p.remove()
+    await p
+      .remove()
       .then(function() {
-        console.log("Remove succeeded.");
+        // console.log("Remove succeeded.");
       })
       .catch(function(error) {
         console.log("Remove failed: " + error.message);
       });
   },
-  async deleteP(_, id) {
-    try {
-      await axios.delete(
-        "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-        { timeout: 8000 }
-      );
-    } catch (error) {
-      console.error(error.message);
-    }
-  },
-  async getAll({ commit }) {
-    try {
-      commit("setLoadingError", false);
-      commit("setLoading", true);
-
-      const all = await axios(
-        "https://vue-test-6edc5.firebaseio.com/projects.json",
-        { timeout: 8000 }
-      );
-      let tmp = [];
-      for (const id in all.data) {
-        tmp.push({
-          id: id,
-          name: all.data[id].name,
-          desc: all.data[id].desc,
-          completion: all.data[id].completion,
-          tasks: all.data[id].tasks,
-        });
-      }
-      commit("setProjects", tmp);
-      commit("setLoading", false);
-    } catch (error) {
-      console.error(error.message);
-      commit("setLoading", false);
-      commit("setLoadingError", true);
-    }
-  },
-
-  async getOne({ commit }, id) {
-    try {
-      commit("setLoadingError", false);
-      commit("setLoading", true);
-      const One = await axios(
-        "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-        { timeout: 3000 }
-      );
-      //   this.completion = One.data.completion;
-      //   this.desc = One.data.desc;
-      //   this.name = One.data.name;
-      //   this.tasks = One.data.tasks;
-
-      //   console.log('from getOne :'+id);
-      //   console.log(One.data);
-      commit("setLoading", false);
-      return One;
-    } catch (error) {
-      commit("setLoading", false);
-      commit("setLoadingError", true);
-    }
-  },
-
   async deleteTask({ dispatch, state }, payload) {
     var changes = {};
     var id = payload.projectId;
@@ -128,7 +44,7 @@ export default {
         let tmpt = state.projects[i].tasks.filter(
           (task) => task.name !== payload.taskName
         );
-        let newW = calcNewWidth(tmpt);
+        let newW = tmpt.length>0? calcNewWidth(tmpt) : '0';
 
         state.projects[i].tasks = tmpt;
         state.projects[i].completion = newW;
@@ -173,4 +89,81 @@ export default {
       }
     }
   },
+  // async createP(_, P) {
+  //   try {
+  //     await axios.post(
+  //       "https://vue-test-6edc5.firebaseio.com/projects.json",
+  //       P,
+  //       { timeout: 8000 }
+  //     );
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // },
+  // async patchP(_, payload) {
+  //   try {
+  //     await axios.patch(
+  //       "https://vue-test-6edc5.firebaseio.com/projects/" +
+  //         payload.id +
+  //         ".json",
+  //       payload.changes,
+  //       { timeout: 8000 }
+  //     );
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // },
+
+  // async deleteP(_, id) {
+  //   try {
+  //     await axios.delete(
+  //       "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
+  //       { timeout: 8000 }
+  //     );
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  // },
+  // async getAll({ commit }) {
+  //   try {
+  //     commit("setLoadingError", false);
+  //     commit("setLoading", true);
+
+  //     const all = await axios(
+  //       "https://vue-test-6edc5.firebaseio.com/projects.json",
+  //       { timeout: 8000 }
+  //     );
+  //     let tmp = [];
+  //     for (const id in all.data) {
+  //       tmp.push({
+  //         id: id,
+  //         name: all.data[id].name,
+  //         desc: all.data[id].desc,
+  //         completion: all.data[id].completion,
+  //         tasks: all.data[id].tasks,
+  //       });
+  //     }
+  //     commit("setProjects", tmp);
+  //     commit("setLoading", false);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     commit("setLoading", false);
+  //     commit("setLoadingError", true);
+  //   }
+  // },
+  // async getOne({ commit }, id) {
+  //   try {
+  //     commit("setLoadingError", false);
+  //     commit("setLoading", true);
+  //     const One = await axios(
+  //       "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
+  //       { timeout: 3000 }
+  //     );
+  //     commit("setLoading", false);
+  //     return One;
+  //   } catch (error) {
+  //     commit("setLoading", false);
+  //     commit("setLoadingError", true);
+  //   }
+  // },
 };

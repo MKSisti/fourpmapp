@@ -1,8 +1,8 @@
 <template>
   <div
-    class="rounded-lg"
+    class="lg:rounded-lg"
     :class="[
-      color ? color : 'bg-darkC',
+      color ? color : 'bg-darker',
       shadow ? shadow : 'shadow-xl',
       width ? width : 'lg:w-3/4',
       margin ? margin : 'mx-auto',
