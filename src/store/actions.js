@@ -63,6 +63,10 @@ export default {
         console.log("Remove failed: " + error.message);
       });
   },
+  async addTask(_,payload){
+    var p = projects.child(payload.id+'/tasks');
+    p.push(payload.task)
+  },
   async deleteTask({ dispatch, state }, payload) {
     var changes = {};
     var id = payload.projectId;
@@ -117,81 +121,5 @@ export default {
       }
     }
   },
-  // async createP(_, P) {
-  //   try {
-  //     await axios.post(
-  //       "https://vue-test-6edc5.firebaseio.com/projects.json",
-  //       P,
-  //       { timeout: 8000 }
-  //     );
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // },
-  // async patchP(_, payload) {
-  //   try {
-  //     await axios.patch(
-  //       "https://vue-test-6edc5.firebaseio.com/projects/" +
-  //         payload.id +
-  //         ".json",
-  //       payload.changes,
-  //       { timeout: 8000 }
-  //     );
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // },
-
-  // async deleteP(_, id) {
-  //   try {
-  //     await axios.delete(
-  //       "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-  //       { timeout: 8000 }
-  //     );
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // },
-  // async getAll({ commit }) {
-  //   try {
-  //     commit("setLoadingError", false);
-  //     commit("setLoading", true);
-
-  //     const all = await axios(
-  //       "https://vue-test-6edc5.firebaseio.com/projects.json",
-  //       { timeout: 8000 }
-  //     );
-  //     let tmp = [];
-  //     for (const id in all.data) {
-  //       tmp.push({
-  //         id: id,
-  //         name: all.data[id].name,
-  //         desc: all.data[id].desc,
-  //         completion: all.data[id].completion,
-  //         tasks: all.data[id].tasks,
-  //       });
-  //     }
-  //     commit("setProjects", tmp);
-  //     commit("setLoading", false);
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     commit("setLoading", false);
-  //     commit("setLoadingError", true);
-  //   }
-  // },
-  // async getOne({ commit }, id) {
-  //   try {
-  //     commit("setLoadingError", false);
-  //     commit("setLoading", true);
-  //     const One = await axios(
-  //       "https://vue-test-6edc5.firebaseio.com/projects/" + id + ".json",
-  //       { timeout: 3000 }
-  //     );
-  //     commit("setLoading", false);
-  //     return One;
-  //   } catch (error) {
-  //     commit("setLoading", false);
-  //     commit("setLoadingError", true);
-  //   }
-  // },
+  
 };

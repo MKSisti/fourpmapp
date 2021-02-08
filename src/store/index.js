@@ -34,7 +34,6 @@ projects.on("value", function(ds) {
     });
   });
   store.state.loading = false;
-  console.log('store init');
 });
 
 // update the store whenever a new project is added

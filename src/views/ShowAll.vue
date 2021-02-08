@@ -44,7 +44,7 @@
         :pid="project.id"
         :pname="project.name"
         :pdesc="project.desc"
-        :ptasks="project.tasks?project.tasks:null"
+        :ptasks="project.tasks ? project.tasks : null"
         :pcustomW="project.completion"
       ></projects-viewer>
     </div>
@@ -74,7 +74,7 @@ export default {
     async deleteProject(id) {
       // console.log(id);
       await this.$store.dispatch("newDeleteP", id);
-      await this.$store.dispatch("getAll");
+      // await this.$store.dispatch("getAll");
     },
     async deleteTask(taskName, projectId) {
       await this.$store.dispatch("deleteTask", {

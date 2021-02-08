@@ -1,7 +1,7 @@
 <template>
   <base-card>
     <div class="space-y-8 uppercase">
-      <h1 class="text-center text-fordark text-3xl font-bold mb-12">
+      <h1 class="text-center text-lighter text-3xl font-bold mb-12">
         {{ project.name }}
       </h1>
       <h1 class="block font-medium text-darkSkyBlue text-2xl">
@@ -15,7 +15,66 @@
         ></div>
       </div>
       <div>
-        <h1 class="block font-medium text-darkSkyBlue text-2xl">Tasks :</h1>
+        <div>
+          <h1 class="block font-medium text-darkSkyBlue text-2xl">
+            Tasks :
+            <base-icon
+              h="1.5rem"
+              w="1.5rem"
+              name="add"
+              class="fill-current text-grn inline mb-1 ml-4 cursor-pointer"
+              @click="toggleShowAddTask"
+            />
+          </h1>
+        </div>
+        <transition name="fade">
+          <div v-if="showAddTask" class="w-5/6 mx-auto mb-2">
+            <div class="flex flex-row space-x-2 justify-around w-full">
+              <div>
+                <label class="block text-lighter" for="name">name</label>
+                <input
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  type="text"
+                  name="name"
+                  id="name"
+                  v-model="tname"
+                />
+              </div>
+              <div>
+                <label class="block text-lighter" for="desc">description</label>
+                <input
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  type="text"
+                  name="desc"
+                  id="desc"
+                  v-model="tdesc"
+                />
+              </div>
+              <div>
+                <label class="block text-lighter" for="duration"
+                  >duration</label
+                >
+                <input
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  type="number"
+                  name="duration"
+                  id="duration"
+                  v-model="tdura"
+                />
+              </div>
+              <div
+                @click="addNewTask"
+                class="bg-bl-d mt-auto hover:bg-bl-dh cursor-pointer"
+              >
+                <div
+                  class="text-center font-medium translay px-2 py-3 text-lighter text-xl"
+                >
+                  ADD
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
         <tasks-viewer
           @finished-task="finishedTask"
           @delete-task="deleteTask"
@@ -35,27 +94,59 @@
 </template>
 
 <script>
+import BaseIcon from "../components/BaseComponents/BaseIcon.vue";
 import TasksViewer from "../components/TasksViewer.vue";
 // import axios from "axios";
 
 export default {
   name: "ProjectViewer",
-  components: { TasksViewer },
+  components: { TasksViewer, BaseIcon },
   props: ["ProjectId"],
-  data() {
-    return {};
-  },
   computed: {
     successPrgrs() {
-      return this.project.completion.includes("100")
-        ? "bg-green-400"
-        : "bg-lightC ";
+      var w = this.project.completion.match(/\d+/)[0];
+      // console.log(w);
+      if (w < 50) {
+        return "bg-rd";
+      } else if (w < 100) {
+        return "bg-bl-dh";
+      }
+      return "bg-grn";
     },
     project() {
       return this.$store.getters.getProject(this.ProjectId);
     },
   },
+  data() {
+    return {
+      showAddTask: false,
+      tname: "",
+      tdesc: "",
+      tdura: 0,
+    };
+  },
   methods: {
+    addNewTask() {
+      if (this.tname && this.tdesc && this.tdura > 0) {
+        const newTask = {
+          name: this.tname,
+          desc: this.tdesc,
+          duration: this.tdura,
+          finished: false,
+        };
+        this.tname = "";
+        this.tdesc = "";
+        this.tdura = 0;
+        console.log(newTask);
+        this.$store.dispatch("addTask", {
+          id: this.ProjectId,
+          task: newTask,
+        });
+      }
+    },
+    toggleShowAddTask() {
+      this.showAddTask = !this.showAddTask;
+    },
     async finishedTask(taskname) {
       let tmp = {
         taskName: taskname,
@@ -72,6 +163,20 @@ export default {
       await this.$store.dispatch("deleteTask", tmp);
     },
   },
-  
 };
 </script>
+
+<style scoped>
+.fade-enter-from {
+  /* transform: translateX(-30px); */
+  opacity: 0;
+}
+.fade-leave-to {
+  /* transform: translateX(-50px); */
+  opacity: 0;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.4s ease;
+}
+</style>
