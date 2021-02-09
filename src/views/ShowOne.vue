@@ -29,11 +29,11 @@
         </div>
         <transition name="fade">
           <div v-if="showAddTask" class="w-5/6 mx-auto mb-2">
-            <div class="flex flex-row space-x-2 justify-around w-full">
+            <div class="flex flex-row space-x-1 justify-around w-full">
               <div>
                 <label class="block text-lighter" for="name">name</label>
                 <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
                   type="text"
                   name="name"
                   id="name"
@@ -43,7 +43,7 @@
               <div>
                 <label class="block text-lighter" for="desc">description</label>
                 <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
                   type="text"
                   name="desc"
                   id="desc"
@@ -55,7 +55,7 @@
                   >duration</label
                 >
                 <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none"
+                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
                   type="number"
                   name="duration"
                   id="duration"
@@ -140,6 +140,7 @@ export default {
         console.log(newTask);
         this.$store.dispatch("addTask", {
           id: this.ProjectId,
+          next: this.project.tasks ? this.project.tasks.length : "0",
           task: newTask,
         });
       }

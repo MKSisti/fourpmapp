@@ -1,5 +1,5 @@
 import { projects } from "../firebase.js";
-  
+
 function calcNewWidth(T) {
   var total = 0;
   var ftot = 0;
@@ -63,9 +63,9 @@ export default {
         console.log("Remove failed: " + error.message);
       });
   },
-  async addTask(_,payload){
-    var p = projects.child(payload.id+'/tasks');
-    p.push(payload.task)
+  async addTask(_, payload) {
+    var p = projects.child(payload.id + "/tasks/" + payload.next);
+    p.set(payload.task);
   },
   async deleteTask({ dispatch, state }, payload) {
     var changes = {};
@@ -121,5 +121,4 @@ export default {
       }
     }
   },
-  
 };
