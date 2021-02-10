@@ -21,7 +21,7 @@ export default {
 
   created() {
     // await this.$store.dispatch("getAll");
-    console.log('created');
+    // console.log('created');
   },
 };
 </script>

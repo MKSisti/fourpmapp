@@ -17,9 +17,11 @@ firebase.initializeApp(firebaseConfig);
 // utils
 const db = firebase.database();
 const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+// const Gprovider = firebase.auth.GoogleAuthProvider();
 
 // collection references
-const projects = firebase.database().ref('projects');
+const projects = firebase.database().ref("projects");
 
 // export utils/refs
-export { db, auth, projects };
+export { db, auth, projects, provider };

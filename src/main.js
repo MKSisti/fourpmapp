@@ -1,8 +1,10 @@
 import { createApp } from "vue";
+import { auth } from "./firebase";
 
 import App from "./App.vue";
 import store from "./store/index.js";
 import router from "./router/index.js";
+
 import "@/assets/css/main.css";
 
 import BaseCard from "./components/BaseComponents/BaseCard.vue";
@@ -18,5 +20,12 @@ app.use(router);
 app.use(store);
 app.mount("#app");
 
-
-
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    console.log("logged in");
+    store.commit("user/setUser", user);
+  } else {
+    console.log("logged out");
+    store.commit("user/setUserOut");
+  }
+});

@@ -15,23 +15,27 @@ function calcNewWidth(T) {
 }
 
 export default {
-  // async storeInit({ state }) {
-  //   await projects.once("value", function(ds) {
-  //     state.loading = true;
-  //     state.projects = [];
+  async storeInit({ state }, id) {
+    var userProjects = projects.child(id);
+    await userProjects.on("value", function(ds) {
+      state.loading = true;
+      state.projects = [];
 
-  //     ds.forEach(function(p) {
-  //       state.projects.push({
-  //         id: p.key,
-  //         name: p.val().name,
-  //         desc: p.val().desc,
-  //         completion: p.val().completion,
-  //         tasks: p.val().tasks,
-  //       });
-  //     });
-  //     state.loading = false;
-  //   });
-  // },
+      ds.forEach(function(p) {
+        state.projects.push({
+          id: p.key,
+          name: p.val().name,
+          desc: p.val().desc,
+          completion: p.val().completion,
+          tasks: p.val().tasks,
+        });
+      });
+      state.loading = false;
+    });
+  },
+  storeClear({ state }) {
+    state.projects = [];
+  },
   // async storeOnProjectAdded({ state }) {
   //   projects.on("child_added", function(ds) {
   //     // var id = ds.key
@@ -45,7 +49,9 @@ export default {
   //   });
   // },
   async newCreateP(_, P) {
-    await projects.push(P);
+    console.log(P);
+    var newp = projects.child(P.uid + "");
+    await newp.push(P.project);
   },
   async newPatchP(_, payload) {
     var p = projects.child(payload.id);
