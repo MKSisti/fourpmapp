@@ -68,6 +68,7 @@ export default {
       projects: "getProjects",
       loading: "getLoading",
       err: "getLoadingErr",
+      uid: 'user/getUID'
     }),
   },
   methods: {

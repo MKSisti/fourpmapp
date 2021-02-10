@@ -33,7 +33,7 @@ export default {
       state.loading = false;
     });
   },
-  storeClear({ state }) {
+  clearStore({ state }) {
     state.projects = [];
   },
   // async storeOnProjectAdded({ state }) {
@@ -49,7 +49,7 @@ export default {
   //   });
   // },
   async newCreateP(_, P) {
-    console.log(P);
+    // console.log(P);
     var newp = projects.child(P.uid + "");
     await newp.push(P.project);
   },

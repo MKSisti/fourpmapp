@@ -10,9 +10,9 @@ export default {
   },
   mutations: {
     setUser(state, u) {
-    //   console.log("from set user");
+      //   console.log("from set user");
       state.isLoggedIn = true;
-    //   console.log(u.uid);
+      //   console.log(u.uid);
       state.userInfo = {
         name: u.displayName,
         picture: u.photoURL,
@@ -21,7 +21,7 @@ export default {
       };
     },
     setUserOut(state) {
-    //   console.log("from out mutation");
+      //   console.log("from out mutation");
       state.isLoggedIn = false;
       state.userInfo = {};
     },
@@ -54,6 +54,11 @@ export default {
     },
     getloggedState({ isLoggedIn }) {
       return isLoggedIn;
+    },
+    getUID({ userInfo }) {
+      if (userInfo.id) {
+        return userInfo.id;
+      } else return null;
     },
   },
 };
