@@ -1,23 +1,25 @@
 import { projects } from "../firebase.js";
 
 function calcNewWidth(T) {
-  var total = 0;
-  var ftot = 0;
-  for (let idx = 0; idx < T.length; idx++) {
-    total += Number(T[idx].duration);
-    if (T[idx].finished == true) {
-      ftot += Number(T[idx].duration);
+  if (T) {
+    var total = 0;
+    var ftot = 0;
+    for (let idx = 0; idx < T.length; idx++) {
+      total += Number(T[idx].duration);
+      if (T[idx].finished == true) {
+        ftot += Number(T[idx].duration);
+      }
     }
-  }
 
-  var w = ((ftot / total) * 100).toFixed(2);
-  return "width: " + w + "%";
+    var w = ((ftot / total) * 100).toFixed(2);
+    return "width: " + w + "%";
+  } else return null;
 }
 
 export default {
   async storeInit({ state }, id) {
     var userProjects = projects.child(id);
-    await userProjects.on("value", function(ds) {
+    userProjects.on("value", function(ds) {
       state.loading = true;
       state.projects = [];
 
@@ -33,7 +35,7 @@ export default {
       state.loading = false;
     });
   },
-  clearStore({ state }) {
+  async clearStore({ state }) {
     state.projects = [];
   },
   // async storeOnProjectAdded({ state }) {
@@ -48,18 +50,21 @@ export default {
   //     });
   //   });
   // },
-  async newCreateP(_, P) {
+  async newCreateP({ rootGetters }, P) {
     // console.log(P);
-    var newp = projects.child(P.uid + "");
+    var uid = rootGetters["user/getUID"];
+    var newp = projects.child(uid);
     await newp.push(P.project);
   },
-  async newPatchP(_, payload) {
-    var p = projects.child(payload.id);
+  async newPatchP({ rootGetters }, payload) {
+    var uid = rootGetters["user/getUID"];
+    var p = projects.child(uid + "/" + payload.id);
     await p.update(payload.changes);
     // console.log(payload.id);
   },
-  async newDeleteP(_, id) {
-    var p = projects.child(id);
+  async newDeleteP({ rootGetters }, id) {
+    var uid = rootGetters["user/getUID"];
+    var p = projects.child(uid + "/" + id);
     await p
       .remove()
       .then(function() {
@@ -69,9 +74,21 @@ export default {
         console.log("Remove failed: " + error.message);
       });
   },
-  async addTask(_, payload) {
-    var p = projects.child(payload.id + "/tasks/" + payload.next);
-    p.set(payload.task);
+  async addTask({ rootGetters, state, dispatch }, payload) {
+    var uid = rootGetters["user/getUID"];
+    var p = projects.child(uid + "/" + payload.id + "/tasks/" + payload.next);
+    await p.set(payload.task);
+    for (let i = 0; i < state.projects.length; i++) {
+      if (state.projects[i].id == payload.id) {
+        var newW = calcNewWidth(state.projects[i].tasks);
+        await dispatch("newPatchP", {
+          id: payload.id,
+          changes: {
+            completion: newW,
+          },
+        });
+      }
+    }
   },
   async deleteTask({ dispatch, state }, payload) {
     var changes = {};

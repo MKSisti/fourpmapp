@@ -14,7 +14,7 @@ export default {
   methods: {
     async addProject(P) {
       // await this.creatP(P);
-      console.log(this.info);
+      // console.log(this.info);
       var payload = {
         project: P,
         uid: this.info.id,

@@ -15,12 +15,12 @@
       <div v-if="!state" class="my-auto font-semibold text-2xl uppercase">
         <h1
           @click="logIn"
-          class="py-12 px-2  hover:bg-bl-d hover:text-lighter cursor-pointer"
+          class="py-12 px-2 hover:bg-bl-d hover:text-lighter cursor-pointer"
         >
           Login
         </h1>
       </div>
-      <div v-else class=" my-auto font-semibold text-2xl uppercase">
+      <div v-else class="my-auto font-semibold text-2xl uppercase">
         <h1
           @click="logOut"
           class="py-12 px-2 hover:bg-bl-d hover:text-lighter cursor-pointer"
@@ -40,11 +40,9 @@ export default {
   methods: {
     logIn() {
       this.$store.dispatch("user/logIn");
-      console.log("from nav");
     },
     logOut() {
       this.$store.dispatch("user/logOut");
-      console.log("from nav");
     },
   },
   computed: {

@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { auth } from "./firebase";
+// import { auth } from "./firebase";
 
 import App from "./App.vue";
 import store from "./store/index.js";
@@ -20,14 +20,16 @@ app.use(router);
 app.use(store);
 app.mount("#app");
 
-auth.onAuthStateChanged(function(user) {
-  if (user) {
-    console.log("logged in as " + user.uid);
-    store.commit("user/setUser", user);
-    store.dispatch("storeInit", user.uid);
-  } else {
-    console.log("logged out");
-    store.commit("user/setUserOut");
-    store.dispatch("clearStore");
-  }
-});
+import "./auth";
+
+// auth.onAuthStateChanged(function(user) {
+//   if (user) {
+//     console.log("logged in as " + user.uid);
+//     store.commit("user/setUser", user);
+//     store.dispatch("storeInit", user.uid);
+//   } else {
+//     console.log("logged out");
+//     store.commit("user/setUserOut");
+//     store.dispatch("clearStore");
+//   }
+// });

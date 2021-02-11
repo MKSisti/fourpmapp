@@ -28,7 +28,7 @@ export default {
   },
   actions: {
     async logIn({ state }) {
-      console.log("in login");
+      // console.log("in login");
       if (state.isLoggedIn) {
         return;
       } else {
@@ -40,7 +40,7 @@ export default {
       }
     },
     async logOut() {
-      console.log("from out");
+      // console.log("from out");
       try {
         await auth.signOut();
       } catch (error) {
