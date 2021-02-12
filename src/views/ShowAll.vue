@@ -56,18 +56,6 @@
         No items to show
       </div>
     </div>
-    <div v-else>
-      <div class="text-center uppercase text-xl font-medium text-lighter">
-        <h1 class="text-center text-lighter text-3xl font-bold mb-12 uppercase">
-          Welcome to 4pm
-        </h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut ipsum
-          magni eligendi repellat similique pariatur, aspernatur corrupti
-          cupiditate quisquam sapiente.
-        </p>
-      </div>
-    </div>
   </base-card>
 </template>
 

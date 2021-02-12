@@ -1,7 +1,12 @@
 <template>
   <div class="w-full bg-darkC h-32 top-0">
     <div class="float-left h-full grid">
-      <h1 class="text-5xl text-lightC font-black my-auto ml-24">4PM</h1>
+      <!-- <h1 class="text-5xl text-lightC font-black my-auto ml-24">4PM</h1> -->
+      <img
+        src="@/assets/icons/log.svg"
+        alt="4pm"
+        class="my-auto ml-24 h-20 w-20"
+      />
     </div>
     <div
       class="float-right text-lighter h-full grid grid-cols-3 mr-32 text-center space-x-4"
@@ -25,6 +30,7 @@
           @click="logOut"
           class="py-12 px-2 hover:bg-bl-d hover:text-lighter cursor-pointer"
         >
+          <span class="text-sm font-thin">Hi,{{ userInfo.name }}</span>
           LogOut
         </h1>
       </div>

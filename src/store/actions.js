@@ -17,7 +17,7 @@ function calcNewWidth(T) {
 }
 
 export default {
-  async storeInit({ state }, id) {
+  storeInit({ state }, id) {
     var userProjects = projects.child(id);
     userProjects.on("value", function(ds) {
       state.loading = true;
@@ -35,7 +35,7 @@ export default {
       state.loading = false;
     });
   },
-  async clearStore({ state }) {
+  clearStore({ state }) {
     state.projects = [];
   },
   // async storeOnProjectAdded({ state }) {

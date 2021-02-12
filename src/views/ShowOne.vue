@@ -16,7 +16,7 @@
       </div>
       <div>
         <div>
-          <h1 class="block font-medium text-darkSkyBlue text-2xl">
+          <h1 class="inline-blocklock font-medium text-darkSkyBlue text-2xl">
             Tasks :
             <base-icon
               h="1.5rem"
@@ -26,55 +26,57 @@
               @click="toggleShowAddTask"
             />
           </h1>
-        </div>
-        <transition name="fade">
-          <div v-if="showAddTask" class="w-5/6 mx-auto mb-2">
-            <div class="flex flex-row space-x-1 justify-around w-full">
-              <div>
-                <label class="block text-lighter" for="name">name</label>
-                <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
-                  type="text"
-                  name="name"
-                  id="name"
-                  v-model="tname"
-                />
-              </div>
-              <div>
-                <label class="block text-lighter" for="desc">description</label>
-                <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
-                  type="text"
-                  name="desc"
-                  id="desc"
-                  v-model="tdesc"
-                />
-              </div>
-              <div>
-                <label class="block text-lighter" for="duration"
-                  >duration</label
-                >
-                <input
-                  class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none "
-                  type="number"
-                  name="duration"
-                  id="duration"
-                  v-model="tdura"
-                />
-              </div>
-              <div
-                @click="addNewTask"
-                class="bg-bl-d mt-auto hover:bg-bl-dh cursor-pointer"
-              >
+          <transition name="fade">
+            <div v-if="showAddTask" class="w-5/6 mx-auto">
+              <div class="flex flex-wrap flex-row justify-start w-full mb-8">
+                <div class="flex-1">
+                  <label class="block text-lighter" for="name">name</label>
+                  <input
+                    class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none min-w-3/4"
+                    type="text"
+                    name="name"
+                    id="name"
+                    v-model="tname"
+                  />
+                </div>
+                <div class="flex-1">
+                  <label class="block text-lighter" for="desc"
+                    >description</label
+                  >
+                  <input
+                    class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none min-w-3/4"
+                    type="text"
+                    name="desc"
+                    id="desc"
+                    v-model="tdesc"
+                  />
+                </div>
+                <div class="flex-1">
+                  <label class="block text-lighter" for="duration"
+                    >duration</label
+                  >
+                  <input
+                    class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none min-w-3/4"
+                    type="number"
+                    name="duration"
+                    id="duration"
+                    v-model="tdura"
+                  />
+                </div>
                 <div
-                  class="text-center font-medium translay px-2 py-3 text-lighter text-xl"
+                  @click="addNewTask"
+                  class="flex-1 bg-bl-d  hover:bg-bl-dh cursor-pointer w-full mt-4 sm:w-1/2 sm:mt-auto"
                 >
-                  ADD
+                  <div
+                    class="text-center font-medium translay px-2 py-3 text-lighter text-xl"
+                  >
+                    ADD
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </transition>
+          </transition>
+        </div>
         <tasks-viewer
           @finished-task="finishedTask"
           @delete-task="deleteTask"
