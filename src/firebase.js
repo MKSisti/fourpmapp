@@ -4,13 +4,12 @@ import "firebase/database";
 
 // firebase init
 const firebaseConfig = {
-  apiKey: "AIzaSyDHEWiHODU8VOVdGoqS3ut6BC5BjBUQh3I",
-  authDomain: "vue-test-6edc5.firebaseapp.com",
-  databaseURL: "https://vue-test-6edc5.firebaseio.com",
-  projectId: "vue-test-6edc5",
-  storageBucket: "vue-test-6edc5.appspot.com",
-  messagingSenderId: "580449538579",
-  appId: "1:580449538579:web:79e9cadb8072c79a72a5e6",
+  apiKey: "AIzaSyAKN7ZF6rAz-DSd1OuL7CDYeIXfQQ62w0o",
+  authDomain: "onepm-78e50.firebaseapp.com",
+  projectId: "onepm-78e50",
+  storageBucket: "onepm-78e50.appspot.com",
+  messagingSenderId: "137218905046",
+  appId: "1:137218905046:web:fcc11be0e65f8ff49aca77"
 };
 firebase.initializeApp(firebaseConfig);
 

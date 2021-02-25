@@ -18,6 +18,7 @@ function calcNewWidth(T) {
 
 export default {
   storeInit({ state }, id) {
+    console.log('in store Init');
     var userProjects = projects.child(id);
     userProjects.on("value", function(ds) {
       state.loading = true;
