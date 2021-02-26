@@ -33,7 +33,7 @@
               h="32"
               w="32"
               :name="tfinished ? 'check-checked' : 'check-blank'"
-              :class="tfinished ? 'fill-current text-grn' : 'fill-current text-darkC'"
+              :class="tfinished ? 'fill-current text-grn' : 'text-lightC stroke-current stroke-1'"
             />
           </div>
           <!-- <div v-if="!tfinished" class="transition duration-300">

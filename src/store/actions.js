@@ -39,18 +39,6 @@ export default {
   clearStore({ state }) {
     state.projects = [];
   },
-  // async storeOnProjectAdded({ state }) {
-  //   projects.on("child_added", function(ds) {
-  //     // var id = ds.key
-  //     state.projects.push({
-  //       id: ds.key,
-  //       name: ds.val().name,
-  //       desc: ds.val().desc,
-  //       completion: ds.val().completion,
-  //       tasks: ds.val().tasks,
-  //     });
-  //   });
-  // },
   async newCreateP({ rootGetters }, P) {
     // console.log(P);
     var uid = rootGetters["user/getUID"];
