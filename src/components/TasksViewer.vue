@@ -12,6 +12,7 @@
       </div>
       <div class="text-lighter font-medium text-right">{{ tduration }} H</div>
       <div
+      v-if="!isGuest"
         @click="deleteTask(tname)"
         class="cursor-pointer ml-7 lg:ml-16 h-8 w-8"
       >
@@ -66,6 +67,7 @@ export default {
     "tseparator",
     "tcanBeMarked",
     "tfinished",
+    "isGuest"
   ],
 
   methods: {

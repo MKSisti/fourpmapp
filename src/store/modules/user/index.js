@@ -1,4 +1,5 @@
-import { auth, provider } from "../../../firebase";
+import { auth, users, provider } from "../../../firebase";
+//
 
 export default {
   namespaced: true,
@@ -27,6 +28,35 @@ export default {
     },
   },
   actions: {
+    async setupUser({ commit, dispatch }, payload) {
+      // console.log(payload);
+      await users.child(payload.uid).once(
+        "value",
+        (ds) => {
+          // all good
+          if (ds.val()) {
+            // user exists
+          } else {
+            // user is yet to be added
+            console.log("ds is null");
+            var newU = users.child(payload.uid);
+            newU.set({
+              email: payload.email,
+              projects: [],
+            });
+          }
+          commit({
+            type: "setUser",
+            ...payload,
+          });
+          dispatch("storeInit", payload.uid, { root: true });
+        },
+        (err) => {
+          // some error
+          console.log(err);
+        }
+      );
+    },
     async logIn({ state }) {
       // console.log("in login");
       if (state.isLoggedIn) {

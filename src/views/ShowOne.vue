@@ -4,6 +4,28 @@
       <h1 class="text-center text-lighter text-3xl font-bold mb-12">
         {{ project.name }}
       </h1>
+      <div class="max-w-max space-y-4">
+        <h1
+          @click="showShare = !showShare"
+          class="font-medium text-darkSkyBlue text-xl py-2 px-4 bg-bl-d cursor-pointer inline"
+        >
+          Share with
+        </h1>
+        <div class="flex flex-row space-x-4" v-if="showShare">
+          <input
+            class="text-lighter font-medium bg-darkC border border-lightC px-2 py-1 focus:outline-none min-w-3/4"
+            type="text"
+            name="shareWith"
+            v-model="shareWith"
+          />
+          <h1
+            @click="shareP"
+            class="font-medium text-darkSkyBlue text-xl py-2 px-4 bg-bl-d cursor-pointer"
+          >
+            Share
+          </h1>
+        </div>
+      </div>
       <h1 class="block font-medium text-darkSkyBlue text-2xl">
         Total Progression :
       </h1>
@@ -65,7 +87,7 @@
                 </div>
                 <div
                   @click="addNewTask"
-                  class="flex-1 bg-bl-d  hover:bg-bl-dh cursor-pointer w-full mt-4 sm:w-1/2 sm:mt-auto"
+                  class="flex-1 bg-bl-d hover:bg-bl-dh cursor-pointer w-full mt-4 sm:w-1/2 sm:mt-auto"
                 >
                   <div
                     class="text-center font-medium translay px-2 py-3 text-lighter text-xl"
@@ -78,8 +100,8 @@
           </transition>
         </div>
         <tasks-viewer
-          @finished-task="finishedTask"
-          @delete-task="deleteTask"
+          @finished-task="finishedT"
+          @delete-task="deleteT"
           v-for="(task, idx) in project.tasks"
           :key="idx + task.name + ProjectId"
           :tid="idx"
@@ -98,6 +120,7 @@
 <script>
 import BaseIcon from "../components/BaseComponents/BaseIcon.vue";
 import TasksViewer from "../components/TasksViewer.vue";
+import { mapActions, mapGetters } from "vuex";
 // import axios from "axios";
 
 export default {
@@ -105,6 +128,7 @@ export default {
   components: { TasksViewer, BaseIcon },
   props: ["ProjectId"],
   computed: {
+    ...mapGetters(["getProject"]),
     successPrgrs() {
       var w = this.project.completion.match(/\d+/)[0];
       // console.log(w);
@@ -116,18 +140,26 @@ export default {
       return "bg-grn";
     },
     project() {
-      return this.$store.getters.getProject(this.ProjectId);
+      return this.getProject(this.ProjectId);
     },
   },
   data() {
     return {
+      showShare: false,
       showAddTask: false,
+      shareWith: "",
       tname: "",
       tdesc: "",
       tdura: 0,
     };
   },
   methods: {
+    ...mapActions(["addTask", "finishedTask", "deleteTask", "shareProject"]),
+    async shareP() {
+      this.shareWith.length > 0
+        ? await this.shareProject({ id: this.ProjectId, email: this.shareWith })
+        : null;
+    },
     addNewTask() {
       if (this.tname && this.tdesc && this.tdura > 0) {
         const newTask = {
@@ -140,7 +172,7 @@ export default {
         this.tdesc = "";
         this.tdura = 0;
         console.log(newTask);
-        this.$store.dispatch("addTask", {
+        this.addTask({
           id: this.ProjectId,
           next: this.project.tasks ? this.project.tasks.length : "0",
           task: newTask,
@@ -150,20 +182,20 @@ export default {
     toggleShowAddTask() {
       this.showAddTask = !this.showAddTask;
     },
-    async finishedTask(taskname) {
+    async finishedT(taskname) {
       let tmp = {
         taskName: taskname,
         projectId: this.ProjectId,
       };
-      await this.$store.dispatch("finishedTask", tmp);
+      await this.finishedTask(tmp);
     },
 
-    async deleteTask(taskname) {
+    async deleteT(taskname) {
       let tmp = {
         taskName: taskname,
         projectId: this.ProjectId,
       };
-      await this.$store.dispatch("deleteTask", tmp);
+      await this.deleteTask(tmp);
     },
   },
 };

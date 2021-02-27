@@ -21,6 +21,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 // collection references
 const projects = firebase.database().ref("projects");
+const users = firebase.database().ref("users");
 
 // export utils/refs
-export { db, auth, projects, provider };
+export { db, auth, projects, users, provider };

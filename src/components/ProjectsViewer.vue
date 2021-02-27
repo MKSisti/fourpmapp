@@ -1,10 +1,19 @@
 <template>
   <div class="mb-12">
     <div class="break-words grid grid-cols-8 items-center mb-3 w-full">
-      <div class="truncate col-span-2 text-lightC text-xl font-bold uppercase">
+      <div
+        v-if="!isGuest"
+        class="truncate col-span-2 text-lightC text-xl font-bold uppercase"
+      >
         <router-link :to="{ name: 'project', params: { ProjectId: pid } }">{{
           pname
         }}</router-link>
+      </div>
+      <div
+        v-else
+        class="truncate col-span-2 text-lightC text-xl font-bold uppercase"
+      >
+        {{ pname }}
       </div>
       <div class="col-span-4 h-5 bg-prgrs mt-1 rounded-full">
         <div
@@ -27,7 +36,11 @@
         />
       </div>
 
-      <div @click="deletePrj" class="mx-auto cursor-pointer h-8 w-8">
+      <div
+        v-if="!isGuest"
+        @click="deletePrj"
+        class="mx-auto cursor-pointer h-8 w-8"
+      >
         <base-icon
           h="32"
           w="32"
@@ -36,7 +49,7 @@
         />
       </div>
     </div>
-    <div v-if="ptasks&&ptasks.length > 0">
+    <div v-if="ptasks && ptasks.length > 0">
       <transition name="fade-in">
         <div class="transition-all duration-500 ease-in-out" v-show="showTasks">
           <tasks-viewer
@@ -52,6 +65,7 @@
             :tfinished="task.finished"
             :tseparator="false"
             :tcanBeMarked="true"
+            :isGuest="isGuest"
           ></tasks-viewer>
         </div>
       </transition>
@@ -77,7 +91,7 @@ export default {
     "finished-ptask",
     "project-changed",
   ],
-  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid"],
+  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid", "isGuest"],
   name: "projects-viewer",
   data() {
     return {
