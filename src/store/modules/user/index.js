@@ -11,7 +11,7 @@ export default {
   },
   mutations: {
     setUser(state, u) {
-      //   console.log("from set user");
+      console.log("from set user");
       state.isLoggedIn = true;
       //   console.log(u.uid);
       state.userInfo = {
@@ -28,9 +28,9 @@ export default {
     },
   },
   actions: {
-    async setupUser({ commit, dispatch }, payload) {
+    setupUser({ commit, dispatch }, payload) {
       // console.log(payload);
-      await users.child(payload.uid).once(
+      users.child(payload.uid).on(
         "value",
         (ds) => {
           // all good
@@ -49,7 +49,7 @@ export default {
             type: "setUser",
             ...payload,
           });
-          dispatch("storeInit", payload.uid, { root: true });
+          dispatch("newStoreInit", payload.uid, { root: true });
         },
         (err) => {
           // some error

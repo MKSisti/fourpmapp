@@ -1,4 +1,4 @@
-import { projects, users } from "../firebase.js";
+import { projects, users, db } from "../firebase.js";
 
 function calcNewWidth(T) {
   if (T) {
@@ -17,26 +17,51 @@ function calcNewWidth(T) {
 }
 
 export default {
+  async newStoreInit({ state }, id) {
+    console.log("newInit");
+    state.loading = true;
+    var user = db.ref().child("users/" + id);
+    var ps;
+    await user.once("value", (ds) => {
+      ps = Object.keys(ds.val().projects);
+    });
+    for (const key of ps) {
+      projects.child(key).on("value", (ds) => {
+        state.projects.filter(p => p.id !== ds.key)
+        var dsV = ds.val();
+        var newP = {
+          id: ds.key,
+          name: dsV.name,
+          desc: dsV.desc,
+          completion: dsV.completion,
+          tasks: dsV.tasks,
+          owner: dsV.owner,
+        };
+        state.projects.push(newP);
+      });
+      state.loading = false;
+    }
+  },
   storeInit({ state }, id) {
     console.log("in store Init");
     var userProjects = projects.orderByChild("owner").equalTo(id);
-    var sharedProjects = users.child(id + "/sharedWithMe");
-    sharedProjects.on("value", async (ds) => {
-      state.loading = true;
-      state.sharedProjects = [];
-      ds.forEach((pId) => {
-        projects.child(pId.val()).once("value", (sharedP) => {
-          state.sharedProjects.push({
-            id: sharedP.key,
-            name: sharedP.val().name,
-            desc: sharedP.val().desc,
-            completion: sharedP.val().completion,
-            tasks: sharedP.val().tasks,
-          });
-        });
-      });
-      state.loading = false;
-    });
+    // var sharedProjects = users.child(id + "/sharedWithMe");
+    // sharedProjects.on("value", async (ds) => {
+    //   state.loading = true;
+    //   state.sharedProjects = [];
+    //   ds.forEach((pId) => {
+    //     projects.child(pId.val()).once("value", (sharedP) => {
+    //       state.sharedProjects.push({
+    //         id: sharedP.key,
+    //         name: sharedP.val().name,
+    //         desc: sharedP.val().desc,
+    //         completion: sharedP.val().completion,
+    //         tasks: sharedP.val().tasks,
+    //       });
+    //     });
+    //   });
+    //   state.loading = false;
+    // });
 
     userProjects.on("value", function(ds) {
       state.loading = true;
@@ -56,6 +81,7 @@ export default {
   },
   clearStore({ state }) {
     state.projects = [];
+    state.sharedProjects = [];
   },
   async newCreateP({ rootGetters }, P) {
     // console.log(P);
@@ -66,6 +92,9 @@ export default {
       ...P.project,
       owner: uid,
     });
+    // var pid = newp.key;
+    await users.child(uid+'/projects').push(newp.key);
+   
   },
   async newPatchP(_, payload) {
     // var uid = rootGetters["user/getUID"];

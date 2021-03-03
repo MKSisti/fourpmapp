@@ -9,7 +9,6 @@ const store = createStore({
   state() {
     return {
       projects: [],
-      sharedProjects: [],
       // projectsCount: 0,
       loading: true,
       err: false,

@@ -2,12 +2,10 @@
   <section class="w-full space-y-8 select-none">
     <nav-bar></nav-bar>
     <!-- class="transition-all duration-500 ease" -->
-    <router-view  v-slot="{ Component }">
-      <suspense>
-        <transition name="slide" mode="out-in">
-          <component :is="Component"></component>
-        </transition>
-      </suspense>
+    <router-view v-slot="{ Component }">
+      <transition name="slide" mode="out-in">
+        <component :is="Component"></component>
+      </transition>
     </router-view>
   </section>
 </template>
@@ -18,7 +16,6 @@ import NavBar from "./components/NavBar.vue";
 export default {
   components: { NavBar },
   name: "App",
-
 };
 </script>
 
