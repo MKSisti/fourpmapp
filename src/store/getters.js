@@ -13,5 +13,5 @@ export default {
   },
   getProject: (state) => (id) => {
     return state.projects.find(project => project.id === id)
-  }
+  },
 };

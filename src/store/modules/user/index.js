@@ -83,8 +83,6 @@ export default {
       return userInfo;
     },
     getloggedState({ isLoggedIn }) {
-      console.log("state is ");
-      console.log(isLoggedIn);
       return isLoggedIn;
     },
     getUID({ userInfo }) {

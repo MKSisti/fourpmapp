@@ -7,6 +7,9 @@
         <router-link :to="{ name: 'project', params: { ProjectId: pid } }">{{
           pname
         }}</router-link>
+        <span>
+          <h3 class="text-sm font-thin italic">Owner: {{ownerMail}}</h3>
+        </span>
       </div>
       <!-- <div
         class="truncate col-span-2 text-lightC text-xl font-bold uppercase"
@@ -78,6 +81,7 @@
 <script>
 import BaseIcon from "./BaseComponents/BaseIcon.vue";
 import tasksViewer from "./TasksViewer.vue";
+import {users} from '../firebase';
 // import _ from 'lodash'
 
 export default {
@@ -88,11 +92,12 @@ export default {
     "finished-ptask",
     "project-changed",
   ],
-  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid"],
+  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid", "owner"],
   name: "projects-viewer",
   data() {
     return {
       showTasks: false,
+      ownerMail: "",
     };
   },
   computed: {
@@ -127,7 +132,16 @@ export default {
     toggleShowTasks() {
       this.showTasks = !this.showTasks;
     },
+    async getOwnerMeta(){
+      await users.child(this.owner+"/email").get().then(async ds => {
+        this.ownerMail = ds.val();
+      });
+      
+    }
   },
+  async mounted(){
+    await this.getOwnerMeta();
+  }
 };
 </script>
 

@@ -47,6 +47,7 @@
             :pdesc="project.desc"
             :ptasks="project.tasks ? project.tasks : null"
             :pcustomW="project.completion"
+            :owner="project.owner"
           ></projects-viewer>
         </div>
 

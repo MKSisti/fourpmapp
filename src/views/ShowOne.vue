@@ -171,11 +171,11 @@ export default {
         this.tname = "";
         this.tdesc = "";
         this.tdura = 0;
-        console.log(newTask);
         this.addTask({
           id: this.ProjectId,
           task: newTask,
         });
+        // this.newStoreInit(this.project.owner);
       }
     },
     toggleShowAddTask() {

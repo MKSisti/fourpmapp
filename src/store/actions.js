@@ -1,6 +1,6 @@
 import { projects, users, db } from "../firebase.js";
 import lo from "lodash";
-import {v4 as uuidv4} from "uuid"
+import { v4 as uuidv4 } from "uuid";
 
 function calcNewWidth(T) {
   if (T) {
@@ -45,23 +45,6 @@ export default {
   storeInit({ state }, id) {
     console.log("in store Init");
     var userProjects = projects.orderByChild("owner").equalTo(id);
-    // var sharedProjects = users.child(id + "/sharedWithMe");
-    // sharedProjects.on("value", async (ds) => {
-    //   state.loading = true;
-    //   state.sharedProjects = [];
-    //   ds.forEach((pId) => {
-    //     projects.child(pId.val()).once("value", (sharedP) => {
-    //       state.sharedProjects.push({
-    //         id: sharedP.key,
-    //         name: sharedP.val().name,
-    //         desc: sharedP.val().desc,
-    //         completion: sharedP.val().completion,
-    //         tasks: sharedP.val().tasks,
-    //       });
-    //     });
-    //   });
-    //   state.loading = false;
-    // });
 
     userProjects.on("value", function(ds) {
       state.loading = true;
@@ -98,17 +81,18 @@ export default {
       .child(newp.key)
       .set(true);
 
-    await dispatch("newStoreInit",uid);
+    await dispatch("newStoreInit", uid);
   },
   async newPatchP(_, payload) {
     // var uid = rootGetters["user/getUID"];
     var p = projects.child(payload.id);
     await p.update(payload.changes);
+
     // console.log(payload.id);
   },
-  async newDeleteP({ rootGetters }, id) {
+  async newDeleteP({ state, rootGetters ,dispatch}, id) {
     var uid = rootGetters["user/getUID"];
-
+    state.loading = true;
     var p = projects.child(id);
     await p
       .remove()
@@ -121,7 +105,12 @@ export default {
     await users
       .child(uid + "/projects")
       .child(id)
-      .remove();
+      .remove().then(async ()=>{
+        await dispatch("newStoreInit",uid);
+        state.loading = false;
+      });
+
+    
   },
   async shareProject(_, payload) {
     var u = users.orderByChild("email").equalTo(payload.email);
@@ -129,18 +118,25 @@ export default {
       var p = projects.child(payload.id + "/team/" + Object.keys(ds.val())[0]);
       await p.set(true);
       await users
-        .child(Object.keys(ds.val())[0] + "/sharedWithMe")
-        .push(payload.id);
+        .child(Object.keys(ds.val())[0] + "/projects/" + payload.id)
+        .set(true);
       // console.log(Object.keys(ds.val())[0]);
     });
   },
   async addTask({ state, dispatch }, payload) {
     // var uid = rootGetters["user/getUID"];
-    var p = projects.child(payload.id + "/tasks/" + uuidv4());
+    var next = uuidv4();
+    var p = projects.child(payload.id + "/tasks/" + next);
     await p.set(payload.task);
     for (let i = 0; i < state.projects.length; i++) {
       if (state.projects[i].id == payload.id) {
-        var newW = calcNewWidth(state.projects[i].tasks);
+        state.projects[i].tasks[next] = payload.task;
+
+        let newW = lo.isEmpty(state.projects[i].tasks)
+          ? "width: 0%"
+          : calcNewWidth(state.projects[i].tasks);
+
+        state.projects[i].completion = newW;
         await dispatch("newPatchP", {
           id: payload.id,
           changes: {
@@ -155,9 +151,6 @@ export default {
 
     for (let i = 0; i < state.projects.length; i++) {
       if (state.projects[i].id == payload.projectId) {
-        // let tmpt = state.projects[i].tasks.filter(
-        //   (task) => task.name !== payload.taskName
-        // );
         let tmpt = {};
         for (const key in state.projects[i].tasks) {
           if (key !== payload.id) {
