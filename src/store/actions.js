@@ -17,6 +17,8 @@ function calcNewWidth(T) {
 
 export default {
   async newStoreInit({ state }, id) {
+    // check if first init == projects[].length is 0
+    // var flag = state.projects.length;
     var user = db.ref().child("users/" + id);
     var ps = null;
     await user.once("value", (ds) => {
@@ -24,23 +26,40 @@ export default {
     });
     if (ps) {
       for (const key in ps) {
-        projects.child(key).once("value", (ds) => {
-          state.projects = state.projects.filter((p) => p.id != ds.key);
-          state.loading = true;
+        projects.child(key).on("value", (ds) => {
           var dsV = ds.val();
-          var newP = {
-            id: ds.key,
-            name: dsV.name,
-            desc: dsV.desc,
-            completion: dsV.completion,
-            tasks: dsV.tasks,
-            owner: dsV.owner,
-          };
-          state.projects.push(newP);
-          state.loading = false;
+          if (state.projects.length == 0) {
+            var newP = {
+              id: ds.key,
+              name: dsV.name,
+              desc: dsV.desc,
+              completion: dsV.completion,
+              tasks: dsV.tasks,
+              owner: dsV.owner,
+            };
+            state.projects.push(newP);
+          } else {
+            for (let i = 0; i < state.projects.length; i++) {
+              if (state.projects[i].id == ds.key) {
+                state.projects[i].completion = dsV.completion;
+                state.projects[i].tasks = dsV.tasks;
+
+              }
+            }
+          }
         });
+        // projects.child(key).on("child_changed", (ds) => {
+        //   for (let i = 0; i < state.projects.length; i++) {
+        //     if (state.projects[i].id == ds.key) {
+        //       console.log(ds.val());
+        //     }
+        //   }
+        // });
       }
     }
+  },
+  async onChildChanged(_, ds) {
+    console.log(ds.val());
   },
   storeInit({ state }, id) {
     console.log("in store Init");
@@ -90,7 +109,7 @@ export default {
 
     // console.log(payload.id);
   },
-  async newDeleteP({ state, rootGetters ,dispatch}, id) {
+  async newDeleteP({ state, rootGetters }, id) {
     var uid = rootGetters["user/getUID"];
     state.loading = true;
     var p = projects.child(id);
@@ -105,12 +124,13 @@ export default {
     await users
       .child(uid + "/projects")
       .child(id)
-      .remove().then(async ()=>{
-        await dispatch("newStoreInit",uid);
+      .remove()
+      .then(async () => {
+        // await dispatch("newStoreInit",uid);
         state.loading = false;
       });
 
-    
+    state.projects = state.projects.filter((p) => p.id !== id);
   },
   async shareProject(_, payload) {
     var u = users.orderByChild("email").equalTo(payload.email);
