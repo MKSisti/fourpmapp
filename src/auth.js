@@ -6,8 +6,8 @@ auth.onAuthStateChanged(async function(user) {
   if (user) {
     // console.log("logged in as " + user.uid);
     // store.commit("user/setUser", user);
-    store.dispatch("user/setupUser", user);
-    router.push({ name: "home" });
+      await store.dispatch("user/setupUser", user);
+      router.push({ name: "home" });
   } else {
     // console.log("logged out");
     store.commit("user/setUserOut");

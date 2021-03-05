@@ -1,9 +1,9 @@
 <template>
   <!-- <h3>in task viewer</h3> -->
   <div class="w-5/6 mx-auto">
-    <div class="break-words w-full grid grid-cols-7 gap-6 items-center">
+    <div class="break-words w-full grid grid-cols-6 gap-6 items-center">
       <!-- TODO: add idx -->
-      <div class="text-lighter font-black text-center">{{ tid + 1 }} .</div>
+      <!-- <div class="text-lighter font-black text-center">{{ tid + 1 }} .</div> -->
       <div class="text-lighter font-medium text-left">
         {{ tname }}
       </div>
@@ -12,8 +12,7 @@
       </div>
       <div class="text-lighter font-medium text-right">{{ tduration }} H</div>
       <div
-      v-if="!isGuest"
-        @click="deleteTask(tname)"
+        @click="deleteTask()"
         class="cursor-pointer ml-7 lg:ml-16 h-8 w-8"
       >
         <base-icon
@@ -26,7 +25,7 @@
       <div
         class="cursor-pointer h-8 w-8"
         v-show="tcanBeMarked"
-        @click="finishedTask(tname)"
+        @click="finishedTask()"
       >
         <transition name="fade-in">
           <div>
@@ -67,18 +66,17 @@ export default {
     "tseparator",
     "tcanBeMarked",
     "tfinished",
-    "isGuest"
   ],
 
   methods: {
-    deleteTask(name) {
+    deleteTask() {
       // console.log("delete task");
-      this.$emit("delete-task", name);
+      this.$emit("delete-task", this.tid);
       // console.log('from task viewer '+name);
     },
-    finishedTask(name) {
+    finishedTask() {
       this.finished = !this.finished;
-      this.$emit("finished-task", name);
+      this.$emit("finished-task", this.tid);
     },
   },
 };

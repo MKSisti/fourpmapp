@@ -11,7 +11,7 @@ export default {
   },
   mutations: {
     setUser(state, u) {
-      console.log("from set user");
+      // console.log("from set user");
       state.isLoggedIn = true;
       //   console.log(u.uid);
       state.userInfo = {
@@ -28,9 +28,9 @@ export default {
     },
   },
   actions: {
-    setupUser({ commit, dispatch }, payload) {
+    async setupUser({ commit, dispatch }, payload) {
       // console.log(payload);
-      users.child(payload.uid).on(
+      await users.child(payload.uid).once(
         "value",
         (ds) => {
           // all good
@@ -38,7 +38,7 @@ export default {
             // user exists
           } else {
             // user is yet to be added
-            console.log("ds is null");
+            // console.log("ds is null");
             var newU = users.child(payload.uid);
             newU.set({
               email: payload.email,
@@ -83,6 +83,8 @@ export default {
       return userInfo;
     },
     getloggedState({ isLoggedIn }) {
+      console.log("state is ");
+      console.log(isLoggedIn);
       return isLoggedIn;
     },
     getUID({ userInfo }) {

@@ -10,7 +10,7 @@ const store = createStore({
     return {
       projects: [],
       // projectsCount: 0,
-      loading: true,
+      loading: false,
       err: false,
     };
   },

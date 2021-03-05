@@ -2,19 +2,17 @@
   <div class="mb-12">
     <div class="break-words grid grid-cols-8 items-center mb-3 w-full">
       <div
-        v-if="!isGuest"
         class="truncate col-span-2 text-lightC text-xl font-bold uppercase"
       >
         <router-link :to="{ name: 'project', params: { ProjectId: pid } }">{{
           pname
         }}</router-link>
       </div>
-      <div
-        v-else
+      <!-- <div
         class="truncate col-span-2 text-lightC text-xl font-bold uppercase"
       >
         {{ pname }}
-      </div>
+      </div> -->
       <div class="col-span-4 h-5 bg-prgrs mt-1 rounded-full">
         <div
           class="ease-in-out transition-all duration-200 h-5 rounded-full"
@@ -37,7 +35,6 @@
       </div>
 
       <div
-        v-if="!isGuest"
         @click="deletePrj"
         class="mx-auto cursor-pointer h-8 w-8"
       >
@@ -49,7 +46,7 @@
         />
       </div>
     </div>
-    <div v-if="ptasks && ptasks.length > 0">
+    <div v-if="ptasks && Object.keys(ptasks)">
       <transition name="fade-in">
         <div class="transition-all duration-500 ease-in-out" v-show="showTasks">
           <tasks-viewer
@@ -65,7 +62,6 @@
             :tfinished="task.finished"
             :tseparator="false"
             :tcanBeMarked="true"
-            :isGuest="isGuest"
           ></tasks-viewer>
         </div>
       </transition>
@@ -82,6 +78,7 @@
 <script>
 import BaseIcon from "./BaseComponents/BaseIcon.vue";
 import tasksViewer from "./TasksViewer.vue";
+// import _ from 'lodash'
 
 export default {
   components: { tasksViewer, BaseIcon },
@@ -91,7 +88,7 @@ export default {
     "finished-ptask",
     "project-changed",
   ],
-  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid", "isGuest"],
+  props: ["pname", "pdesc", "ptasks", "pcustomW", "pid"],
   name: "projects-viewer",
   data() {
     return {
@@ -118,12 +115,12 @@ export default {
       this.$emit("delete-project", this.pid);
       // this.$emit("project-changed");
     },
-    deleteTask(name) {
-      this.$emit("delete-ptask", name, this.pid);
+    deleteTask(id) {
+      this.$emit("delete-ptask", id, this.pid);
       // this.$emit("project-changed");
     },
-    finishedTask(name) {
-      this.$emit("finished-ptask", name, this.pid);
+    finishedTask(id) {
+      this.$emit("finished-ptask", id, this.pid);
       // console.log(name + ' ' + this.pid);
       // this.$emit("project-changed");
     },

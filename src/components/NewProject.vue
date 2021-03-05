@@ -108,6 +108,9 @@ import BaseIcon from "./BaseComponents/BaseIcon.vue";
 import NewTask from "./NewTask.vue";
 import TasksViewer from "./TasksViewer.vue";
 
+import {v4 as uuidv4} from "uuid";
+import _ from 'lodash';
+
 export default {
   name: "project",
   emits: ["add-project", "project-changed"],
@@ -116,7 +119,7 @@ export default {
     return {
       name: null,
       desc: null,
-      tasks: [],
+      tasks: {},
       errors: [],
       completion: "width: 0%",
     };
@@ -124,7 +127,7 @@ export default {
   methods: {
     validateData() {
       this.errors = [];
-      if (this.name && this.desc && this.tasks.length > 0) {
+      if (this.name && this.desc && !_.isEmpty(this.tasks)) {
         // console.log('from val true');
         return true;
       }
@@ -135,7 +138,7 @@ export default {
       if (!this.desc) {
         this.errors.push("Please add a project description");
       }
-      if (this.tasks.length == 0) {
+      if (_.isEmpty(this.tasks)) {
         this.errors.push("Please add at least one task");
       }
       // console.log('from val false');
@@ -149,9 +152,10 @@ export default {
         finished: false,
       };
 
-      this.tasks.push(newT);
+      this.tasks[uuidv4()] = newT;
     },
     confirmProject() {
+      console.log("confirm");
       if (this.validateData()) {
         const newP = {
           name: this.name,
@@ -166,7 +170,7 @@ export default {
         // this.$emit("project-changed");
         // console.log("all good");
       } else {
-        // console.log("nope");
+        console.log("nope");
       }
     },
     deleteTask(name) {

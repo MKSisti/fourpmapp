@@ -29,9 +29,7 @@ export default {
       info: "user/getUserInfo",
     }),
   },
-  mounted(){
-    console.log('add');
-  }
+  
 };
 </script>
 

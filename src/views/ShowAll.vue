@@ -47,7 +47,6 @@
             :pdesc="project.desc"
             :ptasks="project.tasks ? project.tasks : null"
             :pcustomW="project.completion"
-            :isGuest="false"
           ></projects-viewer>
         </div>
 
@@ -84,15 +83,15 @@ export default {
       await this.$store.dispatch("newDeleteP", id);
       // await this.$store.dispatch("getAll");
     },
-    async deleteTask(taskName, projectId) {
+    async deleteTask(id, projectId) {
       await this.$store.dispatch("deleteTask", {
         projectId,
-        taskName,
+        id,
       });
     },
-    async finishedTask(taskName, projectId) {
+    async finishedTask(id, projectId) {
       await this.$store.dispatch("finishedTask", {
-        taskName,
+        id,
         projectId,
       });
     },

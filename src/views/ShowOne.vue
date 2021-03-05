@@ -174,7 +174,6 @@ export default {
         console.log(newTask);
         this.addTask({
           id: this.ProjectId,
-          next: this.project.tasks ? this.project.tasks.length : "0",
           task: newTask,
         });
       }
@@ -182,17 +181,17 @@ export default {
     toggleShowAddTask() {
       this.showAddTask = !this.showAddTask;
     },
-    async finishedT(taskname) {
+    async finishedT(id) {
       let tmp = {
-        taskName: taskname,
+        id,
         projectId: this.ProjectId,
       };
       await this.finishedTask(tmp);
     },
 
-    async deleteT(taskname) {
+    async deleteT(id) {
       let tmp = {
-        taskName: taskname,
+        id,
         projectId: this.ProjectId,
       };
       await this.deleteTask(tmp);
