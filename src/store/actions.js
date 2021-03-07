@@ -15,6 +15,23 @@ function calcNewWidth(T) {
   } else return null;
 }
 
+async function pushProject(ds, projects) {
+  var dsV = await ds.val();
+  var newP = {
+    id: ds.key,
+    name: dsV.name,
+    desc: dsV.desc,
+    completion: dsV.completion,
+    tasks: dsV.tasks,
+    owner: dsV.owner,
+  };
+  projects.push(newP);
+}
+async function updateProject(dsV, project) {
+  project.completion = dsV.completion;
+  project.tasks = dsV.tasks;
+}
+
 export default {
   async newStoreInit({ state }, id) {
     // check if first init == projects[].length is 0
@@ -26,26 +43,13 @@ export default {
     });
     if (ps) {
       for (const key in ps) {
-        projects.child(key).on("value", (ds) => {
+        projects.child(key).on("value", async (ds) => {
           var dsV = ds.val();
-          if (state.projects.length == 0) {
-            var newP = {
-              id: ds.key,
-              name: dsV.name,
-              desc: dsV.desc,
-              completion: dsV.completion,
-              tasks: dsV.tasks,
-              owner: dsV.owner,
-            };
-            state.projects.push(newP);
+          const idx = state.projects.findIndex((p) => p.id == ds.key);
+          if (idx < 0) {
+            await pushProject(ds,state.projects);
           } else {
-            for (let i = 0; i < state.projects.length; i++) {
-              if (state.projects[i].id == ds.key) {
-                state.projects[i].completion = dsV.completion;
-                state.projects[i].tasks = dsV.tasks;
-
-              }
-            }
+            await updateProject(dsV,state.projects[idx]);
           }
         });
         // projects.child(key).on("child_changed", (ds) => {
