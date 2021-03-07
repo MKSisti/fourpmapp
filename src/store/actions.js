@@ -33,9 +33,7 @@ async function updateProject(dsV, project) {
 }
 
 export default {
-  async newStoreInit({ state }, id) {
-    // check if first init == projects[].length is 0
-    // var flag = state.projects.length;
+  async newStoreInit({ state, dispatch }, id) {
     var user = db.ref().child("users/" + id);
     var ps = null;
     await user.once("value", (ds) => {
@@ -47,44 +45,37 @@ export default {
           var dsV = ds.val();
           const idx = state.projects.findIndex((p) => p.id == ds.key);
           if (idx < 0) {
-            await pushProject(ds,state.projects);
+            await pushProject(ds, state.projects);
           } else {
-            await updateProject(dsV,state.projects[idx]);
+            await updateProject(dsV, state.projects[idx]);
           }
         });
-        // projects.child(key).on("child_changed", (ds) => {
-        //   for (let i = 0; i < state.projects.length; i++) {
-        //     if (state.projects[i].id == ds.key) {
-        //       console.log(ds.val());
-        //     }
-        //   }
-        // });
       }
     }
-  },
-  async onChildChanged(_, ds) {
-    console.log(ds.val());
-  },
-  storeInit({ state }, id) {
-    console.log("in store Init");
-    var userProjects = projects.orderByChild("owner").equalTo(id);
-
-    userProjects.on("value", function(ds) {
-      state.loading = true;
-      state.projects = [];
-
-      ds.forEach(function(p) {
-        state.projects.push({
-          id: p.key,
-          name: p.val().name,
-          desc: p.val().desc,
-          completion: p.val().completion,
-          tasks: p.val().tasks,
-        });
-      });
-      state.loading = false;
+    user.on("child_changed", async () => {
+      await dispatch("newStoreInit", id);
     });
   },
+  // storeInit({ state }, id) {
+  //   console.log("in store Init");
+  //   var userProjects = projects.orderByChild("owner").equalTo(id);
+
+  //   userProjects.on("value", function(ds) {
+  //     state.loading = true;
+  //     state.projects = [];
+
+  //     ds.forEach(function(p) {
+  //       state.projects.push({
+  //         id: p.key,
+  //         name: p.val().name,
+  //         desc: p.val().desc,
+  //         completion: p.val().completion,
+  //         tasks: p.val().tasks,
+  //       });
+  //     });
+  //     state.loading = false;
+  //   });
+  // },
   clearStore({ state }) {
     state.projects = [];
     state.sharedProjects = [];
