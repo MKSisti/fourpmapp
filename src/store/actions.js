@@ -15,10 +15,7 @@ function calcNewWidth(T) {
   } else return null;
 }
 
-
-
 function pushProject(ds, projects) {
-
   // console.log("got called");
   var dsV = ds.val();
   var newP = {
@@ -38,27 +35,24 @@ function updateProject(ds, project) {
 }
 
 export default {
-  createListenerOnProjectValue({state},id) {
-    projects.child(id).on('value',(ds)=>{
-      console.log(ds.val());
+  createListenerOnProjectValue({ state }, id) {
+    projects.child(id).on("value", (ds) => {
+      // console.log(ds.val());
       if (ds.val()) {
         const idx = state.projects.findIndex((p) => p.id == ds.key);
         // ds is not null == create or update
-        if (idx < 0 ) {
+        if (idx < 0) {
           // idx < 0 == project is not in the store => create
-           pushProject(ds, state.projects);
-        }
-        else {
+          pushProject(ds, state.projects);
+        } else {
           // idx >= 0 == project exists in store => update
-           updateProject(ds,state.projects[idx]);
+          updateProject(ds, state.projects[idx]);
         }
-      }
-      else{
+      } else {
         //ds is null == delete event
         console.log("deleted");
-        
       }
-    })
+    });
   },
   async newStoreInit({state, dispatch }, id) {
     var user = db.ref().child("users/" + id);
@@ -68,27 +62,33 @@ export default {
     });
     if (ps) {
       for (const key in ps) {
-        dispatch("createListenerOnProjectValue",key);
+        dispatch("createListenerOnProjectValue", key);
       }
     }
-    user.on("child_removed", async (ds) => {
-      // console.log(ds.val());
-      for (const key in ds.val()) {
-        console.log(key);
-        const idx = state.projects.findIndex((p) => p.id == key);
-        console.log(idx);
-        if (idx >= 0) {
-          state.projects = state.projects.filter((p) => p.id !== key);
-        }
+    user.child("projects").on("child_removed", async (ds) => {
+      console.log(ds.key);
+      const idx = state.projects.findIndex((p) => p.id == ds.key);
+      // console.log(idx);
+      if (idx >= 0) {
+        state.projects = state.projects.filter((p) => p.id != ds.key);
       }
-      // await dispatch("newStoreInit", id);
+      
     });
+    user.child("projects").on("child_added", async (ds) => {
+      console.log(ds.key);
+      const idx = state.projects.findIndex((p) => p.id == ds.key);
+      if (idx < 0) {
+        dispatch("createListenerOnProjectValue", ds.key);
+      }
+      
+    });
+    
   },
   clearStore({ state }) {
     state.projects = [];
     // state.sharedProjects = [];
   },
-  async newCreateP({ dispatch ,rootGetters }, P) {
+  async newCreateP({ dispatch, rootGetters }, P) {
     // console.log(P);
     var uid = rootGetters["user/getUID"];
     // var newp = projects.child(uid);
@@ -102,7 +102,7 @@ export default {
       .child(uid + "/projects")
       .child(newp.key)
       .set(true);
-      dispatch("createListenerOnProjectValue",newp.key);
+    dispatch("createListenerOnProjectValue", newp.key);
     // await dispatch("newStoreInit", uid);
   },
   async newPatchP(_, payload) {
@@ -116,7 +116,7 @@ export default {
     var uid = rootGetters["user/getUID"];
     state.loading = true;
     var p = projects.child(id);
-    var team = (await p.child('team').get()).val();
+    var team = (await p.child("team").get()).val();
     // console.log(team);
     await p
       .remove()
@@ -134,20 +134,17 @@ export default {
         // await dispatch("newStoreInit",uid);
         state.projects = state.projects.filter((p) => p.id !== id);
         state.loading = false;
-
       });
     for (const key in team) {
       await users
-      .child(key + "/projects")
-      .child(id)
-      .remove()
-      .then(async () => {
-        // await dispatch("newStoreInit",uid);
-        
-      });
+        .child(key + "/projects")
+        .child(id)
+        .remove()
+        .then(async () => {
+          // await dispatch("newStoreInit",uid);
+        });
     }
     p.off();
-    
   },
   async shareProject(_, payload) {
     var u = users.orderByChild("email").equalTo(payload.email);
