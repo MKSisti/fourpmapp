@@ -38,6 +38,7 @@
       </div>
 
       <div
+        v-if=" getUID == owner"
         @click="deletePrj"
         class="mx-auto cursor-pointer h-8 w-8"
       >
@@ -82,6 +83,7 @@
 import BaseIcon from "./BaseComponents/BaseIcon.vue";
 import tasksViewer from "./TasksViewer.vue";
 import {users} from '../firebase';
+import {mapGetters} from 'vuex'
 // import _ from 'lodash'
 
 export default {
@@ -114,6 +116,7 @@ export default {
     flippedArrows() {
       return this.showTasks ? "transform rotate-180" : "";
     },
+    ...mapGetters("user",["getUID"]),
   },
   methods: {
     deletePrj() {
