@@ -15,8 +15,12 @@ function calcNewWidth(T) {
   } else return null;
 }
 
-async function pushProject(ds, projects) {
-  var dsV = await ds.val();
+
+
+function pushProject(ds, projects) {
+
+  // console.log("got called");
+  var dsV = ds.val();
   var newP = {
     id: ds.key,
     name: dsV.name,
@@ -27,13 +31,36 @@ async function pushProject(ds, projects) {
   };
   projects.push(newP);
 }
-async function updateProject(dsV, project) {
-  project.completion = dsV.completion;
-  project.tasks = dsV.tasks;
+function updateProject(ds, project) {
+  let v = ds.val();
+  project.completion = v.completion;
+  project.tasks = v.tasks;
 }
 
 export default {
-  async newStoreInit({ state, dispatch }, id) {
+  createListenerOnProjectValue({state},id) {
+    projects.child(id).on('value',(ds)=>{
+      console.log(ds.val());
+      if (ds.val()) {
+        const idx = state.projects.findIndex((p) => p.id == ds.key);
+        // ds is not null == create or update
+        if (idx < 0 ) {
+          // idx < 0 == project is not in the store => create
+           pushProject(ds, state.projects);
+        }
+        else {
+          // idx >= 0 == project exists in store => update
+           updateProject(ds,state.projects[idx]);
+        }
+      }
+      else{
+        //ds is null == delete event
+        console.log("deleted");
+        
+      }
+    })
+  },
+  async newStoreInit({state, dispatch }, id) {
     var user = db.ref().child("users/" + id);
     var ps = null;
     await user.once("value", (ds) => {
@@ -41,46 +68,27 @@ export default {
     });
     if (ps) {
       for (const key in ps) {
-        projects.child(key).on("value", async (ds) => {
-          var dsV = ds.val();
-          const idx = state.projects.findIndex((p) => p.id == ds.key);
-          if (idx < 0) {
-            await pushProject(ds, state.projects);
-          } else {
-            await updateProject(dsV, state.projects[idx]);
-          }
-        });
+        dispatch("createListenerOnProjectValue",key);
       }
     }
-    user.on("child_changed", async () => {
-      await dispatch("newStoreInit", id);
+    user.on("child_removed", async (ds) => {
+      // console.log(ds.val());
+      for (const key in ds.val()) {
+        console.log(key);
+        const idx = state.projects.findIndex((p) => p.id == key);
+        console.log(idx);
+        if (idx >= 0) {
+          state.projects = state.projects.filter((p) => p.id !== key);
+        }
+      }
+      // await dispatch("newStoreInit", id);
     });
   },
-  // storeInit({ state }, id) {
-  //   console.log("in store Init");
-  //   var userProjects = projects.orderByChild("owner").equalTo(id);
-
-  //   userProjects.on("value", function(ds) {
-  //     state.loading = true;
-  //     state.projects = [];
-
-  //     ds.forEach(function(p) {
-  //       state.projects.push({
-  //         id: p.key,
-  //         name: p.val().name,
-  //         desc: p.val().desc,
-  //         completion: p.val().completion,
-  //         tasks: p.val().tasks,
-  //       });
-  //     });
-  //     state.loading = false;
-  //   });
-  // },
   clearStore({ state }) {
     state.projects = [];
-    state.sharedProjects = [];
+    // state.sharedProjects = [];
   },
-  async newCreateP({ rootGetters, dispatch }, P) {
+  async newCreateP({ dispatch ,rootGetters }, P) {
     // console.log(P);
     var uid = rootGetters["user/getUID"];
     // var newp = projects.child(uid);
@@ -94,8 +102,8 @@ export default {
       .child(uid + "/projects")
       .child(newp.key)
       .set(true);
-
-    await dispatch("newStoreInit", uid);
+      dispatch("createListenerOnProjectValue",newp.key);
+    // await dispatch("newStoreInit", uid);
   },
   async newPatchP(_, payload) {
     // var uid = rootGetters["user/getUID"];
@@ -108,6 +116,8 @@ export default {
     var uid = rootGetters["user/getUID"];
     state.loading = true;
     var p = projects.child(id);
+    var team = (await p.child('team').get()).val();
+    // console.log(team);
     await p
       .remove()
       .then(function() {
@@ -122,10 +132,22 @@ export default {
       .remove()
       .then(async () => {
         // await dispatch("newStoreInit",uid);
+        state.projects = state.projects.filter((p) => p.id !== id);
         state.loading = false;
-      });
 
-    state.projects = state.projects.filter((p) => p.id !== id);
+      });
+    for (const key in team) {
+      await users
+      .child(key + "/projects")
+      .child(id)
+      .remove()
+      .then(async () => {
+        // await dispatch("newStoreInit",uid);
+        
+      });
+    }
+    p.off();
+    
   },
   async shareProject(_, payload) {
     var u = users.orderByChild("email").equalTo(payload.email);

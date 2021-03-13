@@ -111,9 +111,7 @@ export default {
         this.$emit("add-task", newTask);
       }
     },
-    // deleteTask() {
-    //   this.$emit("delete-task", this.name);
-    // },
+   
   },
 };
 </script>
