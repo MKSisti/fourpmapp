@@ -12,6 +12,7 @@ const store = createStore({
       // projectsCount: 0,
       loading: false,
       err: false,
+      emailVerification: false,
     };
   },
   mutations: mutations,

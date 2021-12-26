@@ -17,6 +17,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+const prEmailPass = new firebase.auth.EmailAuthProvider();
 // const Gprovider = firebase.auth.GoogleAuthProvider();
 
 // collection references
@@ -24,4 +25,4 @@ const projects = firebase.database().ref("projects");
 const users = firebase.database().ref("users");
 
 // export utils/refs
-export { db, auth, projects, users, provider };
+export { db, auth, projects, users, provider, prEmailPass };

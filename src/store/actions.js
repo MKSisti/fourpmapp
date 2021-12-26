@@ -38,7 +38,7 @@ export default {
   createListenerOnProjectValue({ state }, id) {
     projects.child(id).on("value", (ds) => {
       // console.log(ds.val());
-      if (ds.val()) {
+      if (ds.exists()) {
         const idx = state.projects.findIndex((p) => p.id == ds.key);
         // ds is not null == create or update
         if (idx < 0) {

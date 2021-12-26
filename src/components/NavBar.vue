@@ -45,10 +45,18 @@
       </div>
       <div v-if="!state" class="my-auto font-semibold text-2xl uppercase">
         <h1
-          @click="logIn"
+          @click="goTo('signUp')"
           class="py-12 px-2 hover:bg-bl-d hover:text-lighter cursor-pointer"
         >
-          Login
+          SignUp
+        </h1>
+      </div>
+      <div v-if="!state" class="my-auto font-semibold text-2xl uppercase">
+        <h1
+          @click="goTo('signIn')"
+          class="py-12 px-2 hover:bg-bl-d hover:text-lighter cursor-pointer"
+        >
+          Log In
         </h1>
       </div>
       <div v-else class="my-auto font-semibold text-2xl uppercase">
@@ -82,8 +90,8 @@ export default {
   components: { BaseIcon },
   name: "navbar",
   methods: {
-    logIn() {
-      this.$store.dispatch("user/logIn");
+    goTo(link) {
+      this.$router.push({name:link});
     },
     logOut() {
       this.$store.dispatch("user/logOut");

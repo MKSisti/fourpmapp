@@ -3,7 +3,11 @@ import AddOne from "../views/CreateP.vue";
 import ShowAll from "../views/ShowAll.vue";
 import ShowOne from "../views/ShowOne.vue";
 import Welcome from "../views/Welcome.vue";
-import store from "../store";
+import SignUp from "../views/SignUp";
+import SignIn from "../views/SignIn";
+import ResetPwd from "../views/ResetPwd";
+import HandleReset from "../views/HandleReset";
+// import store from "../store";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,6 +16,26 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: ShowAll,
+    },
+    {
+      path: "/signUp",
+      name: "signUp",
+      component: SignUp,
+    },
+    {
+      path: "/signIn",
+      name: "signIn",
+      component: SignIn,
+    },
+    {
+      path: "/resetPwd",
+      name: "resetPwd",
+      component: ResetPwd,
+    },
+    {
+      path: "/handleReset",
+      name: "handleReset",
+      component: HandleReset,
     },
     {
       path: "/welcome",
@@ -32,10 +56,10 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.name != "welcome" && !store.getters["user/getloggedState"])
-    next({ name: "welcome" });
-  else next();
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.name != "welcome" && !store.getters["user/getloggedState"])
+//     next({ name: "welcome" });
+//   else next();
+// });
 
 export default router;

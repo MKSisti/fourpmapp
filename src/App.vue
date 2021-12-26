@@ -1,5 +1,10 @@
 <template>
   <section class="w-full space-y-8 select-none">
+    <div v-if="!verify" id="verifyEmail" class="w-screen">
+      <h1 class="text-center text-yellow-700 text-2xl font-bold mt-3 mb-1 uppercase">
+        Please verify your email. Check your emails.
+      </h1>
+    </div>
     <nav-bar></nav-bar>
     <!-- class="transition-all duration-500 ease" -->
     <router-view v-slot="{ Component }">
@@ -12,10 +17,16 @@
 
 <script>
 import NavBar from "./components/NavBar.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: { NavBar },
   name: "App",
+  computed:{
+    ...mapGetters({
+      verify: "user/getEmailVerification",
+    }),
+  }
 };
 </script>
 

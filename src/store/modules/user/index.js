@@ -1,4 +1,4 @@
-import { auth, users, provider } from "../../../firebase";
+import { auth, users } from "../../../firebase";
 //
 
 export default {
@@ -7,6 +7,7 @@ export default {
     return {
       userInfo: {},
       isLoggedIn: false,
+      emailVerification: true,
     };
   },
   mutations: {
@@ -25,7 +26,11 @@ export default {
       //   console.log("from out mutation");
       state.isLoggedIn = false;
       state.userInfo = {};
+      state.emailVerification = true;
     },
+    setEmailVerification(state, payload) {
+      state.emailVerification = payload.value;
+    }
   },
   actions: {
     async setupUser({ commit, dispatch }, payload) {
@@ -34,7 +39,7 @@ export default {
         "value",
         (ds) => {
           // all good
-          if (ds.val()) {
+          if (ds.exists()) {
             // user exists
           } else {
             // user is yet to be added
@@ -57,18 +62,6 @@ export default {
         }
       );
     },
-    async logIn({ state }) {
-      // console.log("in login");
-      if (state.isLoggedIn) {
-        return;
-      } else {
-        try {
-          await auth.signInWithPopup(provider);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
     async logOut() {
       // console.log("from out");
       try {
@@ -77,6 +70,37 @@ export default {
         console.log(error);
       }
     },
+    async SignUser({ commit }, payload) {
+      await auth.createUserWithEmailAndPassword(payload.email, payload.password).then((U) => {
+        console.log(payload.displayName);
+        U.user.updateProfile({ displayName: payload.displayName });
+        U.user.sendEmailVerification();
+        commit({
+          type: "setEmailVerification",
+          value: U.emailVerified,
+        })
+      }).catch((error) => {
+        console.error(error);
+      })
+
+    },
+    async LogInUser({ commit }, payload) {
+      await auth.signInWithEmailAndPassword(payload.email, payload.password).then((U) => {
+        commit({
+          type: "setEmailVerification",
+          value: U.emailVerified,
+        })
+      }).catch((error) => {
+        console.error(error);
+      });
+
+    },
+    async SendReset(_, payload) {
+      await auth.sendPasswordResetEmail(payload.email, { url: "/handleReset" }).catch((error) => { console.error(error); });
+    },
+    async ResetPwd(_, payload) {
+      console.log(payload.email);
+    }
   },
   getters: {
     getUserInfo({ userInfo }) {
@@ -89,6 +113,9 @@ export default {
       if (userInfo.id) {
         return userInfo.id;
       } else return null;
+    },
+    getEmailVerification({ emailVerification }) {
+      return emailVerification;
     },
   },
 };
